@@ -1,0 +1,9 @@
+tableno	index	pval_unadj_1	pval_Hochberg_1	pval_unadj_2	pval_Hochberg_2
+"2"	"credit_index"	.0004413	.0004413	.2564107	.2564107
+"3"	"biz_index_all"	.0584895	.1754687	.4210418	1.263125
+"3B"	"biz_index_old"	.0286022	.0572044	.79083	5.53581
+"3C"	"biz_index_new"	.0700384	.2801536		
+"4"	"income_index"	.278067	1.390335	.6620533	3.310267
+"5"	"labor_index"	.718198	5.027386	.6694898	4.016939
+"6"	"total_exp_mo_pc"	.7836984	6.269587	.3456325	.691265
+"7"	"social_index"	.4209257	2.525554	.6235637	2.494255

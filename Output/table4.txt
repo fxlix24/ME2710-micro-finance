@@ -1,0 +1,26 @@
+
+Table 4: Income, Endline 1
+	bizprofit_1	wages_nonbiz_1	income_index_1
+	b/se	b/se	b/se
+treatment	354.3	-526.3	-0.0501
+	="(313.5)"	="(358.2)"	="(0.0459)"
+r2	0.00131	0.0427	0.0235
+mn1	744.9	2988.0	-1.77e-09
+sd1	10694.5	3915.4	0.693
+N	6239	6827	6832
+pval	0.261	0.145	0.278
+Robust standard errors, clustered at the area level, in brackets.
+* p<.1, ** p<.05, *** p<.01
+
+Table 4: Income, Endline 2
+	bizprofit_2	wages_nonbiz_2	income_index_2
+	b/se	b/se	b/se
+treatment	542.0	-140.9	0.0114
+	="(371.7)"	="(212.2)"	="(0.0261)"
+r2	0.00174	0.00918	0.00771
+mn2	953.1	5514.0	2.61e-09
+sd2	11279.7	5627.4	0.702
+N	6090	6142	6142
+pval	0.148	0.508	0.662
+Robust standard errors, clustered at the area level, in brackets.
+* p<.1, ** p<.05, *** p<.01

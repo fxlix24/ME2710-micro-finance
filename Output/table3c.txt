@@ -1,0 +1,13 @@
+
+Table 3: Self-employment activities (households with new businesses), Endline 1
+	bizassets_1	bizinvestment_1	bizrev_1	bizexpense_1	bizprofit_1	bizemployees_1	biz_index_new_1
+	b/se	b/se	b/se	b/se	b/se	b/se	b/se
+treatment	-872.6	-705.5	-8166.7	-5012.9	-3547.5	-0.195*	-0.0815*
+	="(2200.7)"	="(1324.1)"	="(7313.8)"	="(4048.9)"	="(3813.1)"	="(0.112)"	="(0.0445)"
+r2	0.0203	0.0102	0.0292	0.0331	0.0257	0.0370	0.0379
+mn1	8410.9	2418.1	17423.0	12114.0	6081.1	0.289	2.87e-09
+sd1	24129.8	13759.7	91781.7	53020.1	43517.2	1.325	0.571
+N	356	356	332	339	270	356	356
+pval	0.693	0.595	0.267	0.219	0.355	0.0865	0.0700
+Robust standard errors, clustered at the area level, in brackets.
+* p<.1, ** p<.05, *** p<.01

@@ -1,0 +1,34 @@
+	c1	
+mean_treatment	 .72357087	
+mean_control	 .74786325	
+diff_pval	 .33246489	
+
+Table A2: Endline 1 attrition
+	EL1attrit1	EL1attrit2	EL1attrit3	EL1attrit4
+	b/se	b/se	b/se	b/se
+treatment	0.0243	0.0173		
+	="(0.0249)"	="(0.0256)"		
+spandana_borrower		-0.0422**		
+		="(0.0197)"		
+pucca		0.0266*		
+		="(0.0140)"		
+hhinslum_months		-0.000385		
+		="(0.000495)"		
+woman_biz		-0.0223		
+		="(0.0209)"		
+woman_salary		0.0223		
+		="(0.0201)"		
+husb_biz		0.00877		
+		="(0.0185)"		
+husb_salary		-0.0116		
+		="(0.0155)"		
+firstloandate			-0.0000297	
+			="(0.0000723)"	
+p10loandate				-0.000133
+				="(0.000208)"
+_cons	0.252***	0.257***	0.781	2.558
+	="(0.0183)"	="(0.0250)"	="(1.234)"	="(3.542)"
+r2	0.000756	0.00286	0.000190	0.000965
+N	7341	7291	3831	3431
+Robust standard errors, clustered at the area level, in brackets.
+* p<.1, ** p<.05, *** p<.01

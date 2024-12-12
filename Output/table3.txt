@@ -1,0 +1,26 @@
+
+Table 3: Self-employment activities, Endline 1
+	bizrev_1	any_new_biz_1	female_biz_new_1
+	b/se	b/se	b/se
+treatment	926.6	0.00895	0.0143***
+	="(1182.5)"	="(0.00610)"	="(0.00533)"
+r2	0.00765	0.000927	0.00341
+mn1	4856.4	0.0474	0.0259
+sd1	33108.4	0.213	0.174
+N	6608	6757	6762
+pval	0.435	0.145	0.00825
+Robust standard errors, clustered at the area level, in brackets.
+* p<.1, ** p<.05, *** p<.01
+
+Table 3: Self-employment activities, Endline 2
+	bizrev_2	any_new_biz_2	female_biz_new_2
+	b/se	b/se	b/se
+treatment	266.1	-0.000154	-0.00470
+	="(526.5)"	="(0.0101)"	="(0.00622)"
+r2	0.00145	0.00228	0.00149
+mn2	5847.1	0.0826	0.0472
+sd2	16784.0	0.275	0.232
+N	6116	6142	6142
+pval	0.614	0.988	0.451
+Robust standard errors, clustered at the area level, in brackets.
+* p<.1, ** p<.05, *** p<.01

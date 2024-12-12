@@ -1,0 +1,28 @@
+
+Table A1: Balance in fixed characteristics, Endline 1
+	spouse_literate_1	spouse_works_wage_1	hhsize_1	women1845_1	anychild1318_1	old_biz	ownland_hyderabad_1	ownland_village_1
+	b/se	b/se	b/se	b/se	b/se	b/se	b/se	b/se
+treatment	-0.00205	-0.0129	-0.0339	-0.0216	0.0153	0.0000153	-0.00201	0.00460
+	="(0.0266)"	="(0.0257)"	="(0.0828)"	="(0.0280)"	="(0.0157)"	="(0.0301)"	="(0.00720)"	="(0.0282)"
+mn1	0.544	0.226	5.645	1.456	0.452	0.381	0.0609	0.195
+sd1	0.498	0.418	2.152	0.820	0.498	0.666	0.239	0.396
+N	6139	6229	6862	6862	6862	6762	6830	6819
+Robust standard errors, clustered at the area level, in brackets.
+* p<.1, ** p<.05, *** p<.01
+	c1	
+F_stat	 .23741589	
+F_pval	 .98290197	
+
+Table A1: Balance in fixed characteristics, Endline 2
+	spouse_literate_2	spouse_works_wage_2	hhsize_2	women1845_2	anychild1318_2	old_biz	ownland_hyderabad_2	ownland_village_2
+	b/se	b/se	b/se	b/se	b/se	b/se	b/se	b/se
+treatment	0.0165	-0.00479	-0.0305	-0.0145	0.00655	0.00821	0.0178	0.0249
+	="(0.0261)"	="(0.0295)"	="(0.100)"	="(0.0285)"	="(0.0168)"	="(0.0313)"	="(0.0135)"	="(0.0316)"
+mn2	0.558	0.259	6.269	1.483	0.463	0.379	0.0908	0.235
+sd2	0.497	0.438	2.548	0.845	0.499	0.668	0.287	0.424
+N	6022	6016	6142	6142	6142	6059	6132	6127
+Robust standard errors, clustered at the area level, in brackets.
+* p<.1, ** p<.05, *** p<.01
+	c1	
+F_stat	 .84343171	
+F_pval	 .56673747	

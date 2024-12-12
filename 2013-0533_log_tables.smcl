@@ -1,0 +1,912 @@
+{smcl}
+{txt}{sf}{ul off}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}/Users/felix/KTH/AppliedEconometrics/Project/2013-0533_log_tables.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res} 6 Dec 2024, 11:35:13
+{txt}
+{com}. 
+. *CONTROLS FOR BASELINE VARIABLES
+. global area_controls "area_pop_base area_debt_total_base area_business_total_base area_exp_pc_mean_base area_literate_head_base area_literate_base"
+{txt}
+{com}. 
+. cd "$outputdir"
+{res}/Users/felix/KTH/AppliedEconometrics/Project/Output
+{txt}
+{com}. 
+. ********************************************************************************
+. *************        Table 1A: Baseline Summary Statistics        **************
+. ********************************************************************************
+. use "$datadir/2013-0533_data_baseline.dta", clear
+{txt}(Baseline data for "The miracle of microfinance?" (Banerjee et al.), AEJ 2014)
+
+{com}. 
+. local hh_composition "hh_size adult children male_head head_age head_noeduc"
+{txt}
+{com}. local credit_access "spandana othermfi bank informal anyloan"
+{txt}
+{com}. local loan_amt "spandana_amt othermfi_amt bank_amt informal_amt anyloan_amt"
+{txt}
+{com}. local self_emp_activ "total_biz female_biz female_biz_pct"
+{txt}
+{com}. local businesses "bizrev bizexpense bizinvestment bizemployees hours_weekbiz"
+{txt}
+{com}. local businesses_allHH "bizrev_allHH bizexpense_allHH bizinvestment_allHH bizemployees_allHH hours_weekbiz_allHH"
+{txt}
+{com}. local consumption "total_exp_mo nondurable_exp_mo durables_exp_mo home_durable_index"
+{txt}
+{com}. 
+. local allvars "`hh_composition' `credit_access' `loan_amt' `self_emp_activ' `businesses' `businesses_allHH' `consumption'"
+{txt}
+{com}. 
+. 
+. *1) Generate variables for business outcomes for all households (replacing each
+. *       variable with 0 for households without a business):
+. foreach var in `businesses' {c -(}
+{txt}  2{com}.         gen `var'_allHH=`var'
+{txt}  3{com}.         replace `var'_allHH=0 if total_biz==0
+{txt}  4{com}.         {c )-}
+{txt}(2,156 missing values generated)
+(2,156 real changes made)
+(2,156 missing values generated)
+(2,156 real changes made)
+(2,156 missing values generated)
+(2,156 real changes made)
+(2,157 missing values generated)
+(2,156 real changes made)
+(2,157 missing values generated)
+(2,156 real changes made)
+
+{com}. 
+. *2) Create summary statistics table:
+. scalar drop _all
+{txt}
+{com}. foreach var of varlist `allvars' {c -(}
+{txt}  2{com}.         sum `var' if treatment==0
+{txt}  3{com}.         scalar `var'_N=r(N)
+{txt}  4{com}.         scalar `var'_c=r(mean)
+{txt}  5{com}.         scalar sd`var'_c=r(sd)
+{txt}  6{com}.         reg `var' treatment, cluster(areaid)
+{txt}  7{com}.         mat beta`var'=e(b)
+{txt}  8{com}.         scalar `var'_d=beta`var'[1,1]
+{txt}  9{com}.         test treatment=0
+{txt} 10{com}.         scalar pval_`var'=r(p)
+{txt} 11{com}.         matrix Table1A = [nullmat(Table1A) \ `var'_N, `var'_c, sd`var'_c, `var'_d, pval_`var']
+{txt} 12{com}.         {c )-}
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+{space 5}hh_size {c |}{res}      1,220    5.037705    1.666212          1         14
+
+{txt}Linear regression                               Number of obs     = {res}     2,440
+                                                {txt}F(1, 103)         =  {res}     1.07
+                                                {txt}Prob > F          = {res}    0.3034
+                                                {txt}R-squared         = {res}    0.0008
+                                                {txt}Root MSE          =    {res} 1.7264
+
+{txt}{ralign 78:(Std. err. adjusted for {res:104} clusters in {res:areaid})}
+{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}     hh_size{col 14}{c |} Coefficient{col 26}  std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}treatment {c |}{col 14}{res}{space 2}  .095082{col 26}{space 2} .0919244{col 37}{space 1}    1.03{col 46}{space 3}0.303{col 54}{space 4}-.0872285{col 67}{space 3} .2773924
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 5.037705{col 26}{space 2} .0622891{col 37}{space 1}   80.88{col 46}{space 3}0.000{col 54}{space 4} 4.914169{col 67}{space 3} 5.161241
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{p 0 7}{space 1}{text:( 1)}{space 1} treatment = 0{p_end}
+
+{txt}       F(  1,   103) ={res}    1.07
+{txt}{col 13}Prob > F ={res}    0.3034
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+{space 6}adults {c |}{res}      1,220    3.438525    1.465599          1         10
+
+{txt}Linear regression                               Number of obs     = {res}     2,440
+                                                {txt}F(1, 103)         =  {res}     0.03
+                                                {txt}Prob > F          = {res}    0.8731
+                                                {txt}R-squared         = {res}    0.0000
+                                                {txt}Root MSE          =    {res} 1.4931
+
+{txt}{ralign 78:(Std. err. adjusted for {res:104} clusters in {res:areaid})}
+{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}      adults{col 14}{c |} Coefficient{col 26}  std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}treatment {c |}{col 14}{res}{space 2}-.0114754{col 26}{space 2} .0716565{col 37}{space 1}   -0.16{col 46}{space 3}0.873{col 54}{space 4}-.1535891{col 67}{space 3} .1306383
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 3.438525{col 26}{space 2} .0479873{col 37}{space 1}   71.65{col 46}{space 3}0.000{col 54}{space 4} 3.343353{col 67}{space 3} 3.533696
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{p 0 7}{space 1}{text:( 1)}{space 1} treatment = 0{p_end}
+
+{txt}       F(  1,   103) ={res}    0.03
+{txt}{col 13}Prob > F ={res}    0.8731
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+{space 4}children {c |}{res}      1,220     1.59918    1.228256          0          7
+
+{txt}Linear regression                               Number of obs     = {res}     2,440
+                                                {txt}F(1, 103)         =  {res}     2.78
+                                                {txt}Prob > F          = {res}    0.0982
+                                                {txt}R-squared         = {res}    0.0018
+                                                {txt}Root MSE          =    {res} 1.2352
+
+{txt}{ralign 78:(Std. err. adjusted for {res:104} clusters in {res:areaid})}
+{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}    children{col 14}{c |} Coefficient{col 26}  std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}treatment {c |}{col 14}{res}{space 2} .1040984{col 26}{space 2} .0623881{col 37}{space 1}    1.67{col 46}{space 3}0.098{col 54}{space 4}-.0196336{col 67}{space 3} .2278304
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2}  1.59918{col 26}{space 2} .0415547{col 37}{space 1}   38.48{col 46}{space 3}0.000{col 54}{space 4} 1.516766{col 67}{space 3} 1.681594
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{p 0 7}{space 1}{text:( 1)}{space 1} treatment = 0{p_end}
+
+{txt}       F(  1,   103) ={res}    2.78
+{txt}{col 13}Prob > F ={res}    0.0982
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+{space 3}male_head {c |}{res}      1,216    .9070724    .2904504          0          1
+
+{txt}Linear regression                               Number of obs     = {res}     2,433
+                                                {txt}F(1, 103)         =  {res}     0.77
+                                                {txt}Prob > F          = {res}    0.3811
+                                                {txt}R-squared         = {res}    0.0004
+                                                {txt}Root MSE          =    {res}  .2988
+
+{txt}{ralign 78:(Std. err. adjusted for {res:104} clusters in {res:areaid})}
+{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}   male_head{col 14}{c |} Coefficient{col 26}  std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}treatment {c |}{col 14}{res}{space 2} -.012249{col 26}{space 2} .0139236{col 37}{space 1}   -0.88{col 46}{space 3}0.381{col 54}{space 4}-.0398631{col 67}{space 3} .0153651
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} .9070724{col 26}{space 2} .0085816{col 37}{space 1}  105.70{col 46}{space 3}0.000{col 54}{space 4} .8900528{col 67}{space 3} .9240919
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{p 0 7}{space 1}{text:( 1)}{space 1} treatment = 0{p_end}
+
+{txt}       F(  1,   103) ={res}    0.77
+{txt}{col 13}Prob > F ={res}    0.3811
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+{space 4}head_age {c |}{res}      1,216    41.14967    10.83945         21         82
+
+{txt}Linear regression                               Number of obs     = {res}     2,431
+                                                {txt}F(1, 103)         =  {res}     0.18
+                                                {txt}Prob > F          = {res}    0.6762
+                                                {txt}R-squared         = {res}    0.0001
+                                                {txt}Root MSE          =    {res} 10.865
+
+{txt}{ralign 78:(Std. err. adjusted for {res:104} clusters in {res:areaid})}
+{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}    head_age{col 14}{c |} Coefficient{col 26}  std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}treatment {c |}{col 14}{res}{space 2}-.2434982{col 26}{space 2} .5813334{col 37}{space 1}   -0.42{col 46}{space 3}0.676{col 54}{space 4}-1.396436{col 67}{space 3} .9094395
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 41.14967{col 26}{space 2}  .375994{col 37}{space 1}  109.44{col 46}{space 3}0.000{col 54}{space 4} 40.40398{col 67}{space 3} 41.89537
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{p 0 7}{space 1}{text:( 1)}{space 1} treatment = 0{p_end}
+
+{txt}       F(  1,   103) ={res}    0.18
+{txt}{col 13}Prob > F ={res}    0.6762
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+{space 1}head_noeduc {c |}{res}      1,216    .3700658    .4830207          0          1
+
+{txt}Linear regression                               Number of obs     = {res}     2,433
+                                                {txt}F(1, 103)         =  {res}     0.07
+                                                {txt}Prob > F          = {res}    0.7869
+                                                {txt}R-squared         = {res}    0.0001
+                                                {txt}Root MSE          =    {res} .48195
+
+{txt}{ralign 78:(Std. err. adjusted for {res:104} clusters in {res:areaid})}
+{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1} head_noeduc{col 14}{c |} Coefficient{col 26}  std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}treatment {c |}{col 14}{res}{space 2}-.0076993{col 26}{space 2} .0284093{col 37}{space 1}   -0.27{col 46}{space 3}0.787{col 54}{space 4}-.0640424{col 67}{space 3} .0486438
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} .3700658{col 26}{space 2} .0227276{col 37}{space 1}   16.28{col 46}{space 3}0.000{col 54}{space 4}  .324991{col 67}{space 3} .4151405
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{p 0 7}{space 1}{text:( 1)}{space 1} treatment = 0{p_end}
+
+{txt}       F(  1,   103) ={res}    0.07
+{txt}{col 13}Prob > F ={res}    0.7869
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+{space 4}spandana {c |}{res}      1,213           0           0          0          0
+
+{txt}Linear regression                               Number of obs     = {res}     2,431
+                                                {txt}F(1, 103)         =  {res}     1.70
+                                                {txt}Prob > F          = {res}    0.1951
+                                                {txt}R-squared         = {res}    0.0033
+                                                {txt}Root MSE          =    {res}  .0572
+
+{txt}{ralign 78:(Std. err. adjusted for {res:104} clusters in {res:areaid})}
+{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}    spandana{col 14}{c |} Coefficient{col 26}  std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}treatment {c |}{col 14}{res}{space 2} .0065681{col 26}{space 2} .0050366{col 37}{space 1}    1.30{col 46}{space 3}0.195{col 54}{space 4}-.0034208{col 67}{space 3} .0165571
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 4.34e-17{col 26}{space 2} 3.47e-18{col 37}{space 1}   12.50{col 46}{space 3}0.000{col 54}{space 4} 3.65e-17{col 67}{space 3} 5.02e-17
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{p 0 7}{space 1}{text:( 1)}{space 1} treatment = 0{p_end}
+
+{txt}       F(  1,   103) ={res}    1.70
+{txt}{col 13}Prob > F ={res}    0.1951
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+{space 4}othermfi {c |}{res}      1,213    .0107172    .1030103          0          1
+
+{txt}Linear regression                               Number of obs     = {res}     2,431
+                                                {txt}F(1, 103)         =  {res}     0.57
+                                                {txt}Prob > F          = {res}    0.4526
+                                                {txt}R-squared         = {res}    0.0008
+                                                {txt}Root MSE          =    {res} .11744
+
+{txt}{ralign 78:(Std. err. adjusted for {res:104} clusters in {res:areaid})}
+{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}    othermfi{col 14}{c |} Coefficient{col 26}  std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}treatment {c |}{col 14}{res}{space 2} .0065241{col 26}{space 2} .0086524{col 37}{space 1}    0.75{col 46}{space 3}0.453{col 54}{space 4}-.0106358{col 67}{space 3} .0236841
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} .0107172{col 26}{space 2} .0035743{col 37}{space 1}    3.00{col 46}{space 3}0.003{col 54}{space 4} .0036285{col 67}{space 3} .0178059
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{p 0 7}{space 1}{text:( 1)}{space 1} treatment = 0{p_end}
+
+{txt}       F(  1,   103) ={res}    0.57
+{txt}{col 13}Prob > F ={res}    0.4526
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+{space 8}bank {c |}{res}      1,213    .0362737    .1870475          0          1
+
+{txt}Linear regression                               Number of obs     = {res}     2,431
+                                                {txt}F(1, 103)         =  {res}     0.03
+                                                {txt}Prob > F          = {res}    0.8588
+                                                {txt}R-squared         = {res}    0.0000
+                                                {txt}Root MSE          =    {res} .18889
+
+{txt}{ralign 78:(Std. err. adjusted for {res:104} clusters in {res:areaid})}
+{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}        bank{col 14}{c |} Coefficient{col 26}  std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}treatment {c |}{col 14}{res}{space 2} .0014931{col 26}{space 2}  .008372{col 37}{space 1}    0.18{col 46}{space 3}0.859{col 54}{space 4}-.0151107{col 67}{space 3}  .018097
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} .0362737{col 26}{space 2} .0052204{col 37}{space 1}    6.95{col 46}{space 3}0.000{col 54}{space 4} .0259203{col 67}{space 3} .0466271
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{p 0 7}{space 1}{text:( 1)}{space 1} treatment = 0{p_end}
+
+{txt}       F(  1,   103) ={res}    0.03
+{txt}{col 13}Prob > F ={res}    0.8588
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+{space 4}informal {c |}{res}      1,213    .6323166    .4823735          0          1
+
+{txt}Linear regression                               Number of obs     = {res}     2,431
+                                                {txt}F(1, 103)         =  {res}     0.00
+                                                {txt}Prob > F          = {res}    0.9582
+                                                {txt}R-squared         = {res}    0.0000
+                                                {txt}Root MSE          =    {res} .48216
+
+{txt}{ralign 78:(Std. err. adjusted for {res:104} clusters in {res:areaid})}
+{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}    informal{col 14}{c |} Coefficient{col 26}  std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}treatment {c |}{col 14}{res}{space 2} .0015094{col 26}{space 2} .0287387{col 37}{space 1}    0.05{col 46}{space 3}0.958{col 54}{space 4}-.0554871{col 67}{space 3} .0585059
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} .6323166{col 26}{space 2} .0233766{col 37}{space 1}   27.05{col 46}{space 3}0.000{col 54}{space 4} .5859546{col 67}{space 3} .6786786
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{p 0 7}{space 1}{text:( 1)}{space 1} treatment = 0{p_end}
+
+{txt}       F(  1,   103) ={res}    0.00
+{txt}{col 13}Prob > F ={res}    0.9582
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+{space 5}anyloan {c |}{res}      1,213    .6801319    .4666176          0          1
+
+{txt}Linear regression                               Number of obs     = {res}     2,431
+                                                {txt}F(1, 103)         =  {res}     0.01
+                                                {txt}Prob > F          = {res}    0.9419
+                                                {txt}R-squared         = {res}    0.0000
+                                                {txt}Root MSE          =    {res}  .4662
+
+{txt}{ralign 78:(Std. err. adjusted for {res:104} clusters in {res:areaid})}
+{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}     anyloan{col 14}{c |} Coefficient{col 26}  std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}treatment {c |}{col 14}{res}{space 2} .0021341{col 26}{space 2}  .029214{col 37}{space 1}    0.07{col 46}{space 3}0.942{col 54}{space 4}-.0558049{col 67}{space 3} .0600731
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} .6801319{col 26}{space 2} .0234903{col 37}{space 1}   28.95{col 46}{space 3}0.000{col 54}{space 4} .6335445{col 67}{space 3} .7267193
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{p 0 7}{space 1}{text:( 1)}{space 1} treatment = 0{p_end}
+
+{txt}       F(  1,   103) ={res}    0.01
+{txt}{col 13}Prob > F ={res}    0.9419
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+spandana_amt {c |}{res}      1,213           0           0          0          0
+
+{txt}Linear regression                               Number of obs     = {res}     2,431
+                                                {txt}F(1, 103)         =  {res}     1.73
+                                                {txt}Prob > F          = {res}    0.1919
+                                                {txt}R-squared         = {res}    0.0022
+                                                {txt}Root MSE          =    {res} 731.07
+
+{txt}{ralign 78:(Std. err. adjusted for {res:104} clusters in {res:areaid})}
+{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}spandana_amt{col 14}{c |} Coefficient{col 26}  std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}treatment {c |}{col 14}{res}{space 2} 68.96552{col 26}{space 2} 52.50021{col 37}{space 1}    1.31{col 46}{space 3}0.192{col 54}{space 4}-35.15627{col 67}{space 3} 173.0873
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2}-2.73e-12{col 26}{space 2} 3.48e-14{col 37}{space 1}  -78.38{col 46}{space 3}0.000{col 54}{space 4}-2.80e-12{col 67}{space 3}-2.66e-12
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{p 0 7}{space 1}{text:( 1)}{space 1} treatment = 0{p_end}
+
+{txt}       F(  1,   103) ={res}    1.73
+{txt}{col 13}Prob > F ={res}    0.1919
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+othermfi_amt {c |}{res}      1,213    201.1542    2742.364          0      75000
+
+{txt}Linear regression                               Number of obs     = {res}     2,431
+                                                {txt}F(1, 103)         =  {res}     0.33
+                                                {txt}Prob > F          = {res}    0.5683
+                                                {txt}R-squared         = {res}    0.0003
+                                                {txt}Root MSE          =    {res} 4762.7
+
+{txt}{ralign 78:(Std. err. adjusted for {res:104} clusters in {res:areaid})}
+{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}othermfi_amt{col 14}{c |} Coefficient{col 26}  std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}treatment {c |}{col 14}{res}{space 2} 170.3565{col 26}{space 2} 297.5897{col 37}{space 1}    0.57{col 46}{space 3}0.568{col 54}{space 4}-419.8424{col 67}{space 3} 760.5554
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 201.1542{col 26}{space 2} 91.09224{col 37}{space 1}    2.21{col 46}{space 3}0.029{col 54}{space 4}  20.4942{col 67}{space 3} 381.8141
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{p 0 7}{space 1}{text:( 1)}{space 1} treatment = 0{p_end}
+
+{txt}       F(  1,   103) ={res}    0.33
+{txt}{col 13}Prob > F ={res}    0.5683
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+{space 4}bank_amt {c |}{res}      1,213     7438.17    173268.3          0    6000000
+
+{txt}Linear regression                               Number of obs     = {res}     2,431
+                                                {txt}F(1, 103)         =  {res}     1.19
+                                                {txt}Prob > F          = {res}    0.2786
+                                                {txt}R-squared         = {res}    0.0005
+                                                {txt}Root MSE          =    {res} 1.2e+05
+
+{txt}{ralign 78:(Std. err. adjusted for {res:104} clusters in {res:areaid})}
+{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}    bank_amt{col 14}{c |} Coefficient{col 26}  std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}treatment {c |}{col 14}{res}{space 2}-5419.697{col 26}{space 2} 4975.574{col 37}{space 1}   -1.09{col 46}{space 3}0.279{col 54}{space 4}-15287.57{col 67}{space 3}  4448.18
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2}  7438.17{col 26}{space 2} 4938.237{col 37}{space 1}    1.51{col 46}{space 3}0.135{col 54}{space 4}-2355.659{col 67}{space 3}    17232
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{p 0 7}{space 1}{text:( 1)}{space 1} treatment = 0{p_end}
+
+{txt}       F(  1,   103) ={res}    1.19
+{txt}{col 13}Prob > F ={res}    0.2786
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+informal_amt {c |}{res}      1,213    28460.02    65312.16          0     940000
+
+{txt}Linear regression                               Number of obs     = {res}     2,431
+                                                {txt}F(1, 103)         =  {res}     0.03
+                                                {txt}Prob > F          = {res}    0.8559
+                                                {txt}R-squared         = {res}    0.0000
+                                                {txt}Root MSE          =    {res}  65564
+
+{txt}{ralign 78:(Std. err. adjusted for {res:104} clusters in {res:areaid})}
+{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}informal_amt{col 14}{c |} Coefficient{col 26}  std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}treatment {c |}{col 14}{res}{space 2}-570.4598{col 26}{space 2} 3132.542{col 37}{space 1}   -0.18{col 46}{space 3}0.856{col 54}{space 4}-6783.117{col 67}{space 3} 5642.197
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 28460.02{col 26}{space 2} 2370.755{col 37}{space 1}   12.00{col 46}{space 3}0.000{col 54}{space 4} 23758.18{col 67}{space 3} 33161.85
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{p 0 7}{space 1}{text:( 1)}{space 1} treatment = 0{p_end}
+
+{txt}       F(  1,   103) ={res}    0.03
+{txt}{col 13}Prob > F ={res}    0.8559
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+{space 1}anyloan_amt {c |}{res}      1,213       37892    191291.6          0    6245000
+
+{txt}Linear regression                               Number of obs     = {res}     2,431
+                                                {txt}F(1, 103)         =  {res}     0.91
+                                                {txt}Prob > F          = {res}    0.3430
+                                                {txt}R-squared         = {res}    0.0004
+                                                {txt}Root MSE          =    {res} 1.4e+05
+
+{txt}{ralign 78:(Std. err. adjusted for {res:104} clusters in {res:areaid})}
+{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1} anyloan_amt{col 14}{c |} Coefficient{col 26}  std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}treatment {c |}{col 14}{res}{space 2}-5878.555{col 26}{space 2} 6170.516{col 37}{space 1}   -0.95{col 46}{space 3}0.343{col 54}{space 4}-18116.32{col 67}{space 3} 6359.208
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2}    37892{col 26}{space 2} 5778.952{col 37}{space 1}    6.56{col 46}{space 3}0.000{col 54}{space 4} 26430.82{col 67}{space 3} 49353.19
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{p 0 7}{space 1}{text:( 1)}{space 1} treatment = 0{p_end}
+
+{txt}       F(  1,   103) ={res}    0.91
+{txt}{col 13}Prob > F ={res}    0.3430
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+{space 3}total_biz {c |}{res}      1,220    .3196721    .6822055          0          7
+
+{txt}Linear regression                               Number of obs     = {res}     2,440
+                                                {txt}F(1, 103)         =  {res}     0.31
+                                                {txt}Prob > F          = {res}    0.5791
+                                                {txt}R-squared         = {res}    0.0002
+                                                {txt}Root MSE          =    {res} .65311
+
+{txt}{ralign 78:(Std. err. adjusted for {res:104} clusters in {res:areaid})}
+{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}   total_biz{col 14}{c |} Coefficient{col 26}  std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}treatment {c |}{col 14}{res}{space 2}-.0188525{col 26}{space 2} .0338751{col 37}{space 1}   -0.56{col 46}{space 3}0.579{col 54}{space 4}-.0860357{col 67}{space 3} .0483308
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} .3196721{col 26}{space 2} .0225323{col 37}{space 1}   14.19{col 46}{space 3}0.000{col 54}{space 4} .2749845{col 67}{space 3} .3643597
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{p 0 7}{space 1}{text:( 1)}{space 1} treatment = 0{p_end}
+
+{txt}       F(  1,   103) ={res}    0.31
+{txt}{col 13}Prob > F ={res}    0.5791
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+{space 2}female_biz {c |}{res}      1,220     .145082    .4002875          0          3
+
+{txt}Linear regression                               Number of obs     = {res}     2,440
+                                                {txt}F(1, 103)         =  {res}     0.10
+                                                {txt}Prob > F          = {res}    0.7498
+                                                {txt}R-squared         = {res}    0.0001
+                                                {txt}Root MSE          =    {res} .39631
+
+{txt}{ralign 78:(Std. err. adjusted for {res:104} clusters in {res:areaid})}
+{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}  female_biz{col 14}{c |} Coefficient{col 26}  std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}treatment {c |}{col 14}{res}{space 2}-.0065574{col 26}{space 2} .0205107{col 37}{space 1}   -0.32{col 46}{space 3}0.750{col 54}{space 4}-.0472355{col 67}{space 3} .0341207
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2}  .145082{col 26}{space 2} .0120044{col 37}{space 1}   12.09{col 46}{space 3}0.000{col 54}{space 4}  .121274{col 67}{space 3} .1688899
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{p 0 7}{space 1}{text:( 1)}{space 1} treatment = 0{p_end}
+
+{txt}       F(  1,   103) ={res}    0.10
+{txt}{col 13}Prob > F ={res}    0.7498
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+female_biz~t {c |}{res}        295    .4882809    .4823504          0          1
+
+{txt}Linear regression                               Number of obs     = {res}       579
+                                                {txt}F(1, 99)          =  {res}     0.01
+                                                {txt}Prob > F          = {res}    0.9041
+                                                {txt}R-squared         = {res}    0.0000
+                                                {txt}Root MSE          =    {res} .48079
+
+{txt}{ralign 78:(Std. err. adjusted for {res:100} clusters in {res:areaid})}
+{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}female_biz~t{col 14}{c |} Coefficient{col 26}  std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}treatment {c |}{col 14}{res}{space 2}-.0055931{col 26}{space 2} .0462809{col 37}{space 1}   -0.12{col 46}{space 3}0.904{col 54}{space 4}-.0974245{col 67}{space 3} .0862383
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} .4882809{col 26}{space 2} .0289986{col 37}{space 1}   16.84{col 46}{space 3}0.000{col 54}{space 4} .4307414{col 67}{space 3} .5458203
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{p 0 7}{space 1}{text:( 1)}{space 1} treatment = 0{p_end}
+
+{txt}       F(  1,    99) ={res}    0.01
+{txt}{col 13}Prob > F ={res}    0.9041
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+{space 6}bizrev {c |}{res}        295    15990.64    53488.75          0     753600
+
+{txt}Linear regression                               Number of obs     = {res}       579
+                                                {txt}F(1, 99)          =  {res}     0.38
+                                                {txt}Prob > F          = {res}    0.5389
+                                                {txt}R-squared         = {res}    0.0016
+                                                {txt}Root MSE          =    {res}  56626
+
+{txt}{ralign 78:(Std. err. adjusted for {res:100} clusters in {res:areaid})}
+{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}      bizrev{col 14}{c |} Coefficient{col 26}  std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}treatment {c |}{col 14}{res}{space 2} 4501.229{col 26}{space 2} 7300.224{col 37}{space 1}    0.62{col 46}{space 3}0.539{col 54}{space 4}-9983.999{col 67}{space 3} 18986.46
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 15990.64{col 26}{space 2} 3068.467{col 37}{space 1}    5.21{col 46}{space 3}0.000{col 54}{space 4} 9902.141{col 67}{space 3} 22079.15
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{p 0 7}{space 1}{text:( 1)}{space 1} treatment = 0{p_end}
+
+{txt}       F(  1,    99) ={res}    0.38
+{txt}{col 13}Prob > F ={res}    0.5389
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+{space 2}bizexpense {c |}{res}        295    3617.416    26144.04          0   430571.4
+
+{txt}Linear regression                               Number of obs     = {res}       579
+                                                {txt}F(1, 99)          =  {res}     0.10
+                                                {txt}Prob > F          = {res}    0.7507
+                                                {txt}R-squared         = {res}    0.0002
+                                                {txt}Root MSE          =    {res}  22661
+
+{txt}{ralign 78:(Std. err. adjusted for {res:100} clusters in {res:areaid})}
+{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}  bizexpense{col 14}{c |} Coefficient{col 26}  std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}treatment {c |}{col 14}{res}{space 2} 640.5524{col 26}{space 2} 2010.221{col 37}{space 1}    0.32{col 46}{space 3}0.751{col 54}{space 4}-3348.163{col 67}{space 3} 4629.268
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 3617.416{col 26}{space 2} 1529.758{col 37}{space 1}    2.36{col 46}{space 3}0.020{col 54}{space 4} 582.0449{col 67}{space 3} 6652.788
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{p 0 7}{space 1}{text:( 1)}{space 1} treatment = 0{p_end}
+
+{txt}       F(  1,    99) ={res}    0.10
+{txt}{col 13}Prob > F ={res}    0.7507
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+bizinvestm~t {c |}{res}        295    384.7119    3156.815          0      48000
+
+{txt}Linear regression                               Number of obs     = {res}       579
+                                                {txt}F(1, 99)          =  {res}     0.00
+                                                {txt}Prob > F          = {res}    0.9585
+                                                {txt}R-squared         = {res}    0.0000
+                                                {txt}Root MSE          =    {res} 2962.4
+
+{txt}{ralign 78:(Std. err. adjusted for {res:100} clusters in {res:areaid})}
+{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}bizinvestm~t{col 14}{c |} Coefficient{col 26}  std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}treatment {c |}{col 14}{res}{space 2} 14.47828{col 26}{space 2}  277.719{col 37}{space 1}    0.05{col 46}{space 3}0.959{col 54}{space 4}-536.5766{col 67}{space 3} 565.5331
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 384.7119{col 26}{space 2} 183.2916{col 37}{space 1}    2.10{col 46}{space 3}0.038{col 54}{space 4} 21.02153{col 67}{space 3} 748.4022
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{p 0 7}{space 1}{text:( 1)}{space 1} treatment = 0{p_end}
+
+{txt}       F(  1,    99) ={res}    0.00
+{txt}{col 13}Prob > F ={res}    0.9585
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+bizemployees {c |}{res}        295    .1694915    .8279255          0          9
+
+{txt}Linear regression                               Number of obs     = {res}       578
+                                                {txt}F(1, 99)          =  {res}     2.13
+                                                {txt}Prob > F          = {res}    0.1480
+                                                {txt}R-squared         = {res}    0.0049
+                                                {txt}Root MSE          =    {res} 1.8194
+
+{txt}{ralign 78:(Std. err. adjusted for {res:100} clusters in {res:areaid})}
+{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}bizemployees{col 14}{c |} Coefficient{col 26}  std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}treatment {c |}{col 14}{res}{space 2} .2545367{col 26}{space 2} .1745711{col 37}{space 1}    1.46{col 46}{space 3}0.148{col 54}{space 4}-.0918502{col 67}{space 3} .6009237
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} .1694915{col 26}{space 2} .0466592{col 37}{space 1}    3.63{col 46}{space 3}0.000{col 54}{space 4} .0769096{col 67}{space 3} .2620734
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{p 0 7}{space 1}{text:( 1)}{space 1} treatment = 0{p_end}
+
+{txt}       F(  1,    99) ={res}    2.13
+{txt}{col 13}Prob > F ={res}    0.1480
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+hours_week~z {c |}{res}        295    76.31525    66.05444          0        507
+
+{txt}Linear regression                               Number of obs     = {res}       578
+                                                {txt}F(1, 99)          =  {res}     0.67
+                                                {txt}Prob > F          = {res}    0.4135
+                                                {txt}R-squared         = {res}    0.0015
+                                                {txt}Root MSE          =    {res} 59.422
+
+{txt}{ralign 78:(Std. err. adjusted for {res:100} clusters in {res:areaid})}
+{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}hours_week~z{col 14}{c |} Coefficient{col 26}  std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}treatment {c |}{col 14}{res}{space 2}-4.587339{col 26}{space 2}  5.58665{col 37}{space 1}   -0.82{col 46}{space 3}0.414{col 54}{space 4}-15.67246{col 67}{space 3} 6.497787
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 76.31525{col 26}{space 2} 4.313513{col 37}{space 1}   17.69{col 46}{space 3}0.000{col 54}{space 4} 67.75631{col 67}{space 3}  84.8742
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{p 0 7}{space 1}{text:( 1)}{space 1} treatment = 0{p_end}
+
+{txt}       F(  1,    99) ={res}    0.67
+{txt}{col 13}Prob > F ={res}    0.4135
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+bizrev_allHH {c |}{res}      1,220     3866.59    27146.79          0     753600
+
+{txt}Linear regression                               Number of obs     = {res}     2,440
+                                                {txt}F(1, 103)         =  {res}     0.24
+                                                {txt}Prob > F          = {res}    0.6258
+                                                {txt}R-squared         = {res}    0.0002
+                                                {txt}Root MSE          =    {res}  28634
+
+{txt}{ralign 78:(Std. err. adjusted for {res:104} clusters in {res:areaid})}
+{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}bizrev_allHH{col 14}{c |} Coefficient{col 26}  std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}treatment {c |}{col 14}{res}{space 2} 903.6492{col 26}{space 2} 1847.482{col 37}{space 1}    0.49{col 46}{space 3}0.626{col 54}{space 4}-2760.396{col 67}{space 3} 4567.695
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2}  3866.59{col 26}{space 2}  759.542{col 37}{space 1}    5.09{col 46}{space 3}0.000{col 54}{space 4} 2360.218{col 67}{space 3} 5372.963
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{p 0 7}{space 1}{text:( 1)}{space 1} treatment = 0{p_end}
+
+{txt}       F(  1,   103) ={res}    0.24
+{txt}{col 13}Prob > F ={res}    0.6258
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+bizexpense~H {c |}{res}      1,220    874.7031    12932.56          0   430571.4
+
+{txt}Linear regression                               Number of obs     = {res}     2,440
+                                                {txt}F(1, 103)         =  {res}     0.06
+                                                {txt}Prob > F          = {res}    0.8119
+                                                {txt}R-squared         = {res}    0.0000
+                                                {txt}Root MSE          =    {res}  11151
+
+{txt}{ralign 78:(Std. err. adjusted for {res:104} clusters in {res:areaid})}
+{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}bizexpense~H{col 14}{c |} Coefficient{col 26}  std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}treatment {c |}{col 14}{res}{space 2} 116.4962{col 26}{space 2} 488.2911{col 37}{space 1}    0.24{col 46}{space 3}0.812{col 54}{space 4}-851.9141{col 67}{space 3} 1084.906
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 874.7031{col 26}{space 2} 363.2361{col 37}{space 1}    2.41{col 46}{space 3}0.018{col 54}{space 4} 154.3101{col 67}{space 3} 1595.096
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{p 0 7}{space 1}{text:( 1)}{space 1} treatment = 0{p_end}
+
+{txt}       F(  1,   103) ={res}    0.06
+{txt}{col 13}Prob > F ={res}    0.8119
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+bizinvestm~H {c |}{res}      1,220    93.02459    1559.052          0      48000
+
+{txt}Linear regression                               Number of obs     = {res}     2,440
+                                                {txt}F(1, 103)         =  {res}     0.00
+                                                {txt}Prob > F          = {res}    0.9988
+                                                {txt}R-squared         = {res}    0.0000
+                                                {txt}Root MSE          =    {res} 1450.8
+
+{txt}{ralign 78:(Std. err. adjusted for {res:104} clusters in {res:areaid})}
+{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}bizinvestm~H{col 14}{c |} Coefficient{col 26}  std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}treatment {c |}{col 14}{res}{space 2}-.0983607{col 26}{space 2}  66.9144{col 37}{space 1}   -0.00{col 46}{space 3}0.999{col 54}{space 4}-132.8073{col 67}{space 3} 132.6106
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 93.02459{col 26}{space 2}  45.3644{col 37}{space 1}    2.05{col 46}{space 3}0.043{col 54}{space 4} 3.055012{col 67}{space 3} 182.9942
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{p 0 7}{space 1}{text:( 1)}{space 1} treatment = 0{p_end}
+
+{txt}       F(  1,   103) ={res}    0.00
+{txt}{col 13}Prob > F ={res}    0.9988
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+bizemploye~H {c |}{res}      1,220    .0409836     .413027          0          9
+
+{txt}Linear regression                               Number of obs     = {res}     2,439
+                                                {txt}F(1, 103)         =  {res}     1.95
+                                                {txt}Prob > F          = {res}    0.1659
+                                                {txt}R-squared         = {res}    0.0010
+                                                {txt}Root MSE          =    {res} .89501
+
+{txt}{ralign 78:(Std. err. adjusted for {res:104} clusters in {res:areaid})}
+{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}bizemploye~H{col 14}{c |} Coefficient{col 26}  std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}treatment {c |}{col 14}{res}{space 2} .0574577{col 26}{space 2} .0411754{col 37}{space 1}    1.40{col 46}{space 3}0.166{col 54}{space 4} -.024204{col 67}{space 3} .1391195
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} .0409836{col 26}{space 2} .0112727{col 37}{space 1}    3.64{col 46}{space 3}0.000{col 54}{space 4} .0186269{col 67}{space 3} .0633403
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{p 0 7}{space 1}{text:( 1)}{space 1} treatment = 0{p_end}
+
+{txt}       F(  1,   103) ={res}    1.95
+{txt}{col 13}Prob > F ={res}    0.1659
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+hours_week~H {c |}{res}      1,220    18.45328    46.05365          0        507
+
+{txt}Linear regression                               Number of obs     = {res}     2,439
+                                                {txt}F(1, 103)         =  {res}     0.71
+                                                {txt}Prob > F          = {res}    0.4003
+                                                {txt}R-squared         = {res}    0.0004
+                                                {txt}Root MSE          =    {res} 42.753
+
+{txt}{ralign 78:(Std. err. adjusted for {res:104} clusters in {res:areaid})}
+{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}hours_week~H{col 14}{c |} Coefficient{col 26}  std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}treatment {c |}{col 14}{res}{space 2}-1.801105{col 26}{space 2} 2.132565{col 37}{space 1}   -0.84{col 46}{space 3}0.400{col 54}{space 4}-6.030544{col 67}{space 3} 2.428334
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 18.45328{col 26}{space 2} 1.531493{col 37}{space 1}   12.05{col 46}{space 3}0.000{col 54}{space 4} 15.41592{col 67}{space 3} 21.49063
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{p 0 7}{space 1}{text:( 1)}{space 1} treatment = 0{p_end}
+
+{txt}       F(  1,   103) ={res}    0.71
+{txt}{col 13}Prob > F ={res}    0.4003
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+total_exp_mo {c |}{res}      1,220    4888.431    4074.372        800      50930
+
+{txt}Linear regression                               Number of obs     = {res}     2,440
+                                                {txt}F(1, 103)         =  {res}     1.44
+                                                {txt}Prob > F          = {res}    0.2322
+                                                {txt}R-squared         = {res}    0.0010
+                                                {txt}Root MSE          =    {res} 4348.3
+
+{txt}{ralign 78:(Std. err. adjusted for {res:104} clusters in {res:areaid})}
+{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}total_exp_mo{col 14}{c |} Coefficient{col 26}  std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}treatment {c |}{col 14}{res}{space 2} 269.6827{col 26}{space 2} 224.3885{col 37}{space 1}    1.20{col 46}{space 3}0.232{col 54}{space 4}-175.3391{col 67}{space 3} 714.7044
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 4888.431{col 26}{space 2} 134.9452{col 37}{space 1}   36.23{col 46}{space 3}0.000{col 54}{space 4} 4620.799{col 67}{space 3} 5156.063
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{p 0 7}{space 1}{text:( 1)}{space 1} treatment = 0{p_end}
+
+{txt}       F(  1,   103) ={res}    1.44
+{txt}{col 13}Prob > F ={res}    0.2322
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+nondurable~o {c |}{res}      1,220    4734.685    3839.802        800      50930
+
+{txt}Linear regression                               Number of obs     = {res}     2,440
+                                                {txt}F(1, 103)         =  {res}     1.43
+                                                {txt}Prob > F          = {res}    0.2346
+                                                {txt}R-squared         = {res}    0.0009
+                                                {txt}Root MSE          =    {res} 4119.7
+
+{txt}{ralign 78:(Std. err. adjusted for {res:104} clusters in {res:areaid})}
+{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}nondurable~o{col 14}{c |} Coefficient{col 26}  std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}treatment {c |}{col 14}{res}{space 2} 251.8193{col 26}{space 2} 210.6127{col 37}{space 1}    1.20{col 46}{space 3}0.235{col 54}{space 4}-165.8814{col 67}{space 3}   669.52
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 4734.685{col 26}{space 2} 125.6507{col 37}{space 1}   37.68{col 46}{space 3}0.000{col 54}{space 4} 4485.487{col 67}{space 3} 4983.884
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{p 0 7}{space 1}{text:( 1)}{space 1} treatment = 0{p_end}
+
+{txt}       F(  1,   103) ={res}    1.43
+{txt}{col 13}Prob > F ={res}    0.2346
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+durables_e~o {c |}{res}      1,220    153.7457    584.5941          0   7708.333
+
+{txt}Linear regression                               Number of obs     = {res}     2,440
+                                                {txt}F(1, 103)         =  {res}     0.39
+                                                {txt}Prob > F          = {res}    0.5312
+                                                {txt}R-squared         = {res}    0.0002
+                                                {txt}Root MSE          =    {res} 570.59
+
+{txt}{ralign 78:(Std. err. adjusted for {res:104} clusters in {res:areaid})}
+{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}durables_e~o{col 14}{c |} Coefficient{col 26}  std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}treatment {c |}{col 14}{res}{space 2} 17.86339{col 26}{space 2} 28.43186{col 37}{space 1}    0.63{col 46}{space 3}0.531{col 54}{space 4} -38.5245{col 67}{space 3} 74.25127
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 153.7457{col 26}{space 2} 20.37728{col 37}{space 1}    7.54{col 46}{space 3}0.000{col 54}{space 4} 113.3322{col 67}{space 3} 194.1592
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{p 0 7}{space 1}{text:( 1)}{space 1} treatment = 0{p_end}
+
+{txt}       F(  1,   103) ={res}    0.39
+{txt}{col 13}Prob > F ={res}    0.5312
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+home_durab~x {c |}{res}      1,220    1.941369    .8290679   .2444602   4.681735
+
+{txt}Linear regression                               Number of obs     = {res}     2,440
+                                                {txt}F(1, 103)         =  {res}     0.18
+                                                {txt}Prob > F          = {res}    0.6689
+                                                {txt}R-squared         = {res}    0.0003
+                                                {txt}Root MSE          =    {res} .83901
+
+{txt}{ralign 78:(Std. err. adjusted for {res:104} clusters in {res:areaid})}
+{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}home_durab~x{col 14}{c |} Coefficient{col 26}  std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}treatment {c |}{col 14}{res}{space 2} .0269436{col 26}{space 2} .0628173{col 37}{space 1}    0.43{col 46}{space 3}0.669{col 54}{space 4}-.0976396{col 67}{space 3} .1515268
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 1.941369{col 26}{space 2} .0433472{col 37}{space 1}   44.79{col 46}{space 3}0.000{col 54}{space 4}   1.8554{col 67}{space 3} 2.027338
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{p 0 7}{space 1}{text:( 1)}{space 1} treatment = 0{p_end}
+
+{txt}       F(  1,   103) ={res}    0.18
+{txt}{col 13}Prob > F ={res}    0.6689
+{txt}
+{com}. matrix rownames Table1A = `allvars'
+{txt}
+{com}. matrix colnames Table1A = Obs Control_mean Control_sd Difference p_val
+{txt}
+{com}. mat2txt, matrix(Table1A) saving("$outputdir/table1a.txt") replace
+{err}command {bf}mat2txt{sf} is unrecognized
+{txt}{search r(199), local:r(199);}
+
+end of do-file
+
+{search r(199), local:r(199);}
+
+{com}. do "/var/folders/3z/wxsh3hjn0_57l7qsmjtjjb5w0000gn/T//SD85474.000000"
+{txt}
+{com}. /*******************************************************************************      
+> Program Name:   2013-0533_do_tables  
+> Contact:                Cynthia Kinnan (c-kinnan@northwestern.edu)
+> Last Modified:  5 May 2014
+> Purpose:                Replicates all tables from "The miracle of microfinance? Evidence
+>                                 from a randomized evaluation" (Banerjee et al.), AEJ, 2014
+> Files Used:     2013-0533_data_baseline.dta
+>                                 2013-0533_data_endlines1and2.dta
+>                                 2013-0533_data_census.dta
+>                                 2013-0533_data_endline1businesstype.dta
+> Files Created:  table1a.txt
+>                                 table1b.txt
+>                                 table2.txt
+>                                 table3.txt
+>                                 table3b.txt
+>                                 table3c.txt
+>                                 table4.txt
+>                                 table5.txt
+>                                 table6.txt
+>                                 table7.txt
+>                                 table_index_pvals.txt
+>                                 tableA1.txt
+>                                 tableA2.txt
+>                                 tableA3.txt
+>                                 tableA4.txt
+>                                 tableA5.txt
+> *******************************************************************************/
+. cap log close
+{smcl}
+{com}{sf}{ul off}

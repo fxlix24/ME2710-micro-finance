@@ -1,0 +1,28 @@
+	c1	
+mean_treatment	 .88885802	
+mean_control	 .90165441	
+diff_pval	 .24799203	
+
+Table A3: Endline 2 attrition by household characteristics
+	total_exp_mo_pc_1	temptation_exp_mo_pc_1	durables_exp_mo_pc_1	festival_exp_mo_pc_1	spandana_1	anymfi_1	newbiz_1	old_biz	bizprofit_1
+	b/se	b/se	b/se	b/se	b/se	b/se	b/se	b/se	b/se
+EL1_characteristic	0.00988***	-0.00782	0.0156	0.0348	-0.0343***	-0.0275***	-0.0165	-0.00332	0.000500
+	="(0.00323)"	="(0.0268)"	="(0.0114)"	="(0.0305)"	="(0.0101)"	="(0.00819)"	="(0.00993)"	="(0.00663)"	="(0.000535)"
+_cons	0.0906***	0.105***	0.103***	0.103***	0.109***	0.111***	0.106***	0.106***	0.103***
+	="(0.00704)"	="(0.00632)"	="(0.00582)"	="(0.00615)"	="(0.00593)"	="(0.00644)"	="(0.00568)"	="(0.00582)"	="(0.00543)"
+r2	0.00129	0.0000107	0.000455	0.000153	0.00124	0.00137	0.000224	0.0000505	0.000383
+N	6827	6827	6781	6827	6811	6811	6757	6762	6239
+Robust standard errors, clustered at the area level, in brackets.
+* p<.1, ** p<.05, *** p<.01
+
+Table A3: Endline 2 attrition by household characteristics, treatment vs. control
+	total_exp_mo_pc_1	temptation_exp_mo_pc_1	durables_exp_mo_pc_1	festival_exp_mo_pc_1	spandana_1	anymfi_1	newbiz_1	old_biz	bizprofit_1
+	b/se	b/se	b/se	b/se	b/se	b/se	b/se	b/se	b/se
+treat_EL1_characteristic	-0.00518	0.0448	-0.00916	0.0151	-0.00923	-0.0426**	0.00941	-0.0156	0.000456
+	="(0.00649)"	="(0.0525)"	="(0.0232)"	="(0.0600)"	="(0.0253)"	="(0.0166)"	="(0.0201)"	="(0.0131)"	="(0.000855)"
+_cons	0.0801***	0.101***	0.0960***	0.0966***	0.0999***	0.0992***	0.0992***	0.0962***	0.0952***
+	="(0.0102)"	="(0.00791)"	="(0.00707)"	="(0.00718)"	="(0.00637)"	="(0.00689)"	="(0.00682)"	="(0.00643)"	="(0.00628)"
+r2	0.00173	0.000482	0.000877	0.000566	0.00208	0.00279	0.000691	0.000781	0.00117
+N	6827	6827	6781	6827	6811	6811	6757	6762	6239
+Robust standard errors, clustered at the area level, in brackets.
+* p<.1, ** p<.05, *** p<.01
