@@ -1,9 +1,9 @@
 {smcl}
-{com}{sf}{ul off}{txt}{.-}
+{txt}{sf}{ul off}{.-}
       name:  {res}<unnamed>
-       {txt}log:  {res}/Users/felix/KTH/AppliedEconometrics/Project/Output/2013-0533_log_tables.smcl
+       {txt}log:  {res}/Users/felix/KTH/AppliedEconometrics/Project/Replication/2013-0533_log_tables.smcl
   {txt}log type:  {res}smcl
- {txt}opened on:  {res}16 Dec 2024, 14:58:46
+ {txt}opened on:  {res}16 Dec 2024, 14:53:04
 {txt}
 {com}. 
 . *CONTROLS FOR BASELINE VARIABLES
@@ -234,7 +234,7 @@
 {col 1}    spandana{col 14}{c |} Coefficient{col 26}  std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
 {hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
 {space 3}treatment {c |}{col 14}{res}{space 2} .0065681{col 26}{space 2} .0050366{col 37}{space 1}    1.30{col 46}{space 3}0.195{col 54}{space 4}-.0034208{col 67}{space 3} .0165571
-{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 4.34e-17{col 26}{space 2} 3.00e-18{col 37}{space 1}   14.43{col 46}{space 3}0.000{col 54}{space 4} 3.74e-17{col 67}{space 3} 4.93e-17
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 4.34e-17{col 26}{space 2} 3.47e-18{col 37}{space 1}   12.50{col 46}{space 3}0.000{col 54}{space 4} 3.65e-17{col 67}{space 3} 5.02e-17
 {txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
 {res}
 {p 0 7}{space 1}{text:( 1)}{space 1} treatment = 0{p_end}
@@ -354,7 +354,7 @@ spandana_amt {c |}{res}      1,213           0           0          0          0
 {col 1}spandana_amt{col 14}{c |} Coefficient{col 26}  std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
 {hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
 {space 3}treatment {c |}{col 14}{res}{space 2} 68.96552{col 26}{space 2} 52.50021{col 37}{space 1}    1.31{col 46}{space 3}0.192{col 54}{space 4}-35.15627{col 67}{space 3} 173.0873
-{txt}{space 7}_cons {c |}{col 14}{res}{space 2}-2.73e-12{col 26}{space 2} 3.18e-14{col 37}{space 1}  -85.87{col 46}{space 3}0.000{col 54}{space 4}-2.79e-12{col 67}{space 3}-2.67e-12
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2}-2.73e-12{col 26}{space 2} 3.48e-14{col 37}{space 1}  -78.38{col 46}{space 3}0.000{col 54}{space 4}-2.80e-12{col 67}{space 3}-2.66e-12
 {txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
 {res}
 {p 0 7}{space 1}{text:( 1)}{space 1} treatment = 0{p_end}
@@ -8625,9 +8625,9 @@ female_b~w_2 {c |}{res}      2,943    .0472307    .2320621          0          2
 .         
 . log close
       {txt}name:  {res}<unnamed>
-       {txt}log:  {res}/Users/felix/KTH/AppliedEconometrics/Project/Output/2013-0533_log_tables.smcl
+       {txt}log:  {res}/Users/felix/KTH/AppliedEconometrics/Project/Replication/2013-0533_log_tables.smcl
   {txt}log type:  {res}smcl
- {txt}closed on:  {res}16 Dec 2024, 14:58:51
+ {txt}closed on:  {res}16 Dec 2024, 14:53:09
 {txt}{.-}
 {smcl}
 {txt}{sf}{ul off}

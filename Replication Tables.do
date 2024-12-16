@@ -6,10 +6,10 @@ set mem 100m
 pause on
 
 *DATA DIRECTORY
-global datadir "/Users/floorjespers/Library/CloudStorage/OneDrive-KULeuven/Erasmus/Applied Econometrics/Folders Applied Econometrics/Data"
+global datadir "/Users/felix/KTH/AppliedEconometrics/Project/DATA"
 
 *OUTPUT DIRECTORY
-global outputdir "/Users/floorjespers/Library/CloudStorage/OneDrive-KULeuven/Erasmus/Applied Econometrics/Folders Applied Econometrics/Replication"
+global outputdir "/Users/felix/KTH/AppliedEconometrics/Project/Replication"
 
 *LOG FILE
 log using replication_logfile_tables.smcl, replace 
@@ -79,7 +79,10 @@ display "`businesses_allHH'"
 local consumption "total_exp_mo_1 total_exp_mo_2 nondurable_exp_mo_1 nondurable_exp_mo_2 durables_exp_mo_1 durables_exp_mo_2 home_durable_index_1 home_durable_index_2"
 display "`consumption'"
 
-local allvars "`hh_composition' `credit_access' `loan_amt' `self_emp_activ' `businesses' `businesses_allHH' `consumption'"
+* local allvars "`hh_composition' `credit_access' `loan_amt' `self_emp_activ' `businesses' `businesses_allHH' `consumption'"
+
+local allvars "`bizrev_allHH_' `bizexpense_allHH_' `bizinvestment_allHH_' `bizemployees_allHH_' `hours_week_biz_allHH_'"
+
 display "`allvars'"
 
 
