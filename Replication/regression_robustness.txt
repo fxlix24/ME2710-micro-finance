@@ -1,0 +1,18 @@
+	(1)	(2)	(3)	(4)	(5)	(6)	(7)	(8)	(9)	(10)	(11)	(12)
+VARIABLES	Excluding area_pop_base	Excluding area_debt_total_base	Excluding area_business_total_base	Excluding area_pop_base	Excluding area_debt_total_base	Excluding area_business_total_base	Excluding area_pop_base	Excluding area_debt_total_base	Excluding area_business_total_base	Excluding area_pop_base	Excluding area_debt_total_base	Excluding area_business_total_base
+												
+bizrev_2	0.386***	0.389***	0.386***	0.386***	0.389***	0.386***	0.386***	0.389***	0.386***	0.386***	0.389***	0.386***
+	(0.0225)	(0.0226)	(0.0225)	(0.0225)	(0.0226)	(0.0225)	(0.0225)	(0.0226)	(0.0225)	(0.0225)	(0.0226)	(0.0225)
+area_debt_total_base	0.0687***		0.0700***	0.0687***		0.0700***	0.0687***		0.0700***	0.0687***		0.0700***
+	(0.0133)		(0.0134)	(0.0133)		(0.0134)	(0.0133)		(0.0134)	(0.0133)		(0.0134)
+area_business_total_base	57.09	69.93		57.09	69.93		57.09	69.93		57.09	69.93	
+	(75.80)	(76.25)		(75.80)	(76.25)		(75.80)	(76.25)		(75.80)	(76.25)	
+area_pop_base		1.025	2.056		1.025	2.056		1.025	2.056		1.025	2.056
+		(2.527)	(2.523)		(2.527)	(2.523)		(2.527)	(2.523)		(2.527)	(2.523)
+Constant	-353.3	1,572	-626.8	-353.3	1,572	-626.8	-353.3	1,572	-626.8	-353.3	1,572	-626.8
+	(798.0)	(1,065)	(1,018)	(798.0)	(1,065)	(1,018)	(798.0)	(1,065)	(1,018)	(798.0)	(1,065)	(1,018)
+												
+Observations	5,895	5,895	5,895	5,895	5,895	5,895	5,895	5,895	5,895	5,895	5,895	5,895
+R-squared	0.052	0.048	0.052	0.052	0.048	0.052	0.052	0.048	0.052	0.052	0.048	0.052
+Standard errors in parentheses												
+*** p<0.01, ** p<0.05, * p<0.1												

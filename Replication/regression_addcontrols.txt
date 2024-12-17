@@ -1,0 +1,38 @@
+	(1)
+VARIABLES	With Additional Controls
+	
+bizrev_2	0.378***
+	(0.0227)
+area_pop_base	2.097
+	(2.543)
+area_debt_total_base	0.0694***
+	(0.0134)
+area_business_total_base	68.89
+	(76.52)
+adults_1	2,210
+	(1,899)
+adults_2	733.1
+	(1,376)
+children_1	2,189
+	(1,991)
+children_2	233.3
+	(962.4)
+male_head_1	626.0
+	(1,491)
+male_head_2	1,158
+	(1,163)
+hhsize_1	-3,045
+	(2,316)
+hhsize_adj_1	1,317
+	(1,393)
+hhsize_2	601.1
+	(455.7)
+hhsize_adj_2	-1,225
+	(1,411)
+Constant	-5,146***
+	(1,897)
+	
+Observations	5,872
+R-squared	0.055
+Standard errors in parentheses	
+*** p<0.01, ** p<0.05, * p<0.1	
