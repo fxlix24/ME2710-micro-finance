@@ -1,0 +1,51 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}/Users/felix/KTH/AppliedEconometrics/Project/sensitivity_analysis_log.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}17 Dec 2024, 09:37:25
+{txt}
+{com}. cd "$outputdir"
+{res}/Users/felix/KTH/AppliedEconometrics/Project/Output
+{txt}
+{com}. 
+. ********************************************************************************
+. ******* Sensitivity Analysis: Quantile Treatment Effect Regressions ************
+. ********************************************************************************
+. 
+. * Load the dataset
+. use "$datadir/2013-0533_data_endlines1and2.dta", clear
+{txt}(Endline data for "The miracle of microfinance?" (Banerjee et al.), AEJ 2014)
+
+{com}. 
+. * 1. Sensitivity to Quantile Levels
+. local quantiles 10 25 50 75 90
+{txt}
+{com}. foreach q of local quantiles {c -(}
+{txt}  2{com}.     quietly qreg bizprofit_1_old treatment, quantile(`q'/100)
+{txt}  3{com}.     estimates store quantile_`q'
+{txt}  4{com}.     estimates table quantile_`q', stats(rmse) title("Quantile: `q'%")
+{txt}  5{com}.     graph export "quantile_sensitivity_`q'.png", replace
+{txt}  6{com}. {c )-}
+{err}variable {bf}bizprofit_1_old{sf} not found
+{txt}{search r(111), local:r(111);}
+
+end of do-file
+
+{search r(111), local:r(111);}
+
+{com}. do "/var/folders/3z/wxsh3hjn0_57l7qsmjtjjb5w0000gn/T//SD35444.000000"
+{txt}
+{com}. 
+. /*******************************************************************************
+> Program Name:    sensitivity_analysis.do
+> Contact:         Felix (Created for further analysis)
+> Purpose:         Conducts sensitivity analysis on quantile treatment effect regressions
+>                  for "The miracle of microfinance?" replication project.
+> *******************************************************************************/
+. 
+. version 13.1
+{txt}
+{com}. cap log close
+{smcl}
+{com}{sf}{ul off}
