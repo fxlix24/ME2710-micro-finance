@@ -3,7 +3,7 @@
       name:  {res}<unnamed>
        {txt}log:  {res}/Users/felix/KTH/AppliedEconometrics/Project/Output/sensitivity_analysis_log.smcl
   {txt}log type:  {res}smcl
- {txt}opened on:  {res}17 Dec 2024, 09:53:02
+ {txt}opened on:  {res}18 Dec 2024, 12:08:27
 {txt}
 {com}. cd "$outputdir"
 {res}/Users/felix/KTH/AppliedEconometrics/Project/Output
@@ -343,7 +343,7 @@ format
       {txt}name:  {res}<unnamed>
        {txt}log:  {res}/Users/felix/KTH/AppliedEconometrics/Project/Output/sensitivity_analysis_log.smcl
   {txt}log type:  {res}smcl
- {txt}closed on:  {res}17 Dec 2024, 09:53:21
+ {txt}closed on:  {res}18 Dec 2024, 12:08:46
 {txt}{.-}
 {smcl}
 {txt}{sf}{ul off}

@@ -3,7 +3,7 @@
       name:  {res}<unnamed>
        {txt}log:  {res}/Users/felix/KTH/AppliedEconometrics/Project/sensitivity_analysis_log.smcl
   {txt}log type:  {res}smcl
- {txt}opened on:  {res}17 Dec 2024, 09:37:25
+ {txt}opened on:  {res}18 Dec 2024, 12:07:43
 {txt}
 {com}. cd "$outputdir"
 {res}/Users/felix/KTH/AppliedEconometrics/Project/Output
@@ -19,22 +19,292 @@
 
 {com}. 
 . * 1. Sensitivity to Quantile Levels
-. local quantiles 10 25 50 75 90
+. local quantiles 0.10 0.25 0.50 0.75 0.90
 {txt}
 {com}. foreach q of local quantiles {c -(}
-{txt}  2{com}.     quietly qreg bizprofit_1_old treatment, quantile(`q'/100)
-{txt}  3{com}.     estimates store quantile_`q'
-{txt}  4{com}.     estimates table quantile_`q', stats(rmse) title("Quantile: `q'%")
-{txt}  5{com}.     graph export "quantile_sensitivity_`q'.png", replace
-{txt}  6{com}. {c )-}
-{err}variable {bf}bizprofit_1_old{sf} not found
-{txt}{search r(111), local:r(111);}
+{txt}  2{com}.     local qname = subinstr("`q'", ".", "_", .)   // Replace "." with "_"
+{txt}  3{com}.     quietly qreg bizprofit_1 treatment, quantile(`q')
+{txt}  4{com}.     estimates store quantile_`qname'
+{txt}  5{com}.     estimates table quantile_`qname', stats(rmse) title("Quantile: `q'")
+{txt}  6{com}.     
+.     * Generate a simple scatter plot for treatment effect (example graph)
+.     predict yhat_`qname' if e(sample), xb
+{txt}  7{com}.     twoway scatter yhat_`qname' treatment, ///
+>         title("Quantile Regression: `q'") ///
+>         ytitle("Predicted Outcome") xtitle("Treatment")
+{txt}  8{com}.     
+.     graph export "quantile_sensitivity_`qname'.png", replace
+{txt}  9{com}. {c )-}
+{res}
+{txt}{p}Quantile: 0.10
+
+{hline 12}{c -}{c TT}{c -}{hline 10}{c -}{c -}
+{ralign 12:Variable} {c |} {center 10:quantil~10} {space 1}
+{hline 12}{c -}{c +}{c -}{hline 10}{c -}{c -}
+{res}{txt}{space 3}treatment {c |}{res} {ralign 10:0}{txt} {space 1}
+{res}{txt}{space 7}_cons {c |}{res} {ralign 10:0}{txt} {space 1}
+{res}{txt}{hline 12}{c -}{c +}{c -}{hline 10}{c -}{c -}
+{ralign 12:rmse} {c |}{res} {ralign 10:}{txt} {space 1}
+{res}{txt}{hline 12}{c -}{c BT}{c -}{hline 10}{c -}{c -}
+{res}{txt}(624 missing values generated)
+{res}{txt}{p 0 4 2}
+file {bf}
+/Users/felix/KTH/AppliedEconometrics/Project/Output/quantile_sensitivity_0_10.png{rm}
+saved as
+PNG
+format
+{p_end}
+{res}
+{txt}{p}Quantile: 0.25
+
+{hline 12}{c -}{c TT}{c -}{hline 10}{c -}{c -}
+{ralign 12:Variable} {c |} {center 10:quantil~25} {space 1}
+{hline 12}{c -}{c +}{c -}{hline 10}{c -}{c -}
+{res}{txt}{space 3}treatment {c |}{res} {ralign 10:0}{txt} {space 1}
+{res}{txt}{space 7}_cons {c |}{res} {ralign 10:0}{txt} {space 1}
+{res}{txt}{hline 12}{c -}{c +}{c -}{hline 10}{c -}{c -}
+{ralign 12:rmse} {c |}{res} {ralign 10:}{txt} {space 1}
+{res}{txt}{hline 12}{c -}{c BT}{c -}{hline 10}{c -}{c -}
+{res}{txt}(624 missing values generated)
+{res}{txt}{p 0 4 2}
+file {bf}
+/Users/felix/KTH/AppliedEconometrics/Project/Output/quantile_sensitivity_0_25.png{rm}
+saved as
+PNG
+format
+{p_end}
+{res}
+{txt}{p}Quantile: 0.50
+
+{hline 12}{c -}{c TT}{c -}{hline 10}{c -}{c -}
+{ralign 12:Variable} {c |} {center 10:quantil~50} {space 1}
+{hline 12}{c -}{c +}{c -}{hline 10}{c -}{c -}
+{res}{txt}{space 3}treatment {c |}{res} {ralign 10:0}{txt} {space 1}
+{res}{txt}{space 7}_cons {c |}{res} {ralign 10:0}{txt} {space 1}
+{res}{txt}{hline 12}{c -}{c +}{c -}{hline 10}{c -}{c -}
+{ralign 12:rmse} {c |}{res} {ralign 10:}{txt} {space 1}
+{res}{txt}{hline 12}{c -}{c BT}{c -}{hline 10}{c -}{c -}
+{res}{txt}(624 missing values generated)
+{res}{txt}{p 0 4 2}
+file {bf}
+/Users/felix/KTH/AppliedEconometrics/Project/Output/quantile_sensitivity_0_50.png{rm}
+saved as
+PNG
+format
+{p_end}
+{res}
+{txt}{p}Quantile: 0.75
+
+{hline 12}{c -}{c TT}{c -}{hline 10}{c -}{c -}
+{ralign 12:Variable} {c |} {center 10:quantil~75} {space 1}
+{hline 12}{c -}{c +}{c -}{hline 10}{c -}{c -}
+{res}{txt}{space 3}treatment {c |}{res} {ralign 10:0}{txt} {space 1}
+{res}{txt}{space 7}_cons {c |}{res} {ralign 10:0}{txt} {space 1}
+{res}{txt}{hline 12}{c -}{c +}{c -}{hline 10}{c -}{c -}
+{ralign 12:rmse} {c |}{res} {ralign 10:}{txt} {space 1}
+{res}{txt}{hline 12}{c -}{c BT}{c -}{hline 10}{c -}{c -}
+{res}{txt}(624 missing values generated)
+{res}{txt}{p 0 4 2}
+file {bf}
+/Users/felix/KTH/AppliedEconometrics/Project/Output/quantile_sensitivity_0_75.png{rm}
+saved as
+PNG
+format
+{p_end}
+{res}
+{txt}{p}Quantile: 0.90
+
+{hline 12}{c -}{c TT}{c -}{hline 10}{c -}{c -}
+{ralign 12:Variable} {c |} {center 10:quantil~90} {space 1}
+{hline 12}{c -}{c +}{c -}{hline 10}{c -}{c -}
+{res}{txt}{space 3}treatment {c |}{res} {ralign 10:0}{txt} {space 1}
+{res}{txt}{space 7}_cons {c |}{res} {ralign 10:3000}{txt} {space 1}
+{res}{txt}{hline 12}{c -}{c +}{c -}{hline 10}{c -}{c -}
+{ralign 12:rmse} {c |}{res} {ralign 10:}{txt} {space 1}
+{res}{txt}{hline 12}{c -}{c BT}{c -}{hline 10}{c -}{c -}
+{res}{txt}(624 missing values generated)
+{res}{txt}{p 0 4 2}
+file {bf}
+/Users/felix/KTH/AppliedEconometrics/Project/Output/quantile_sensitivity_0_90.png{rm}
+saved as
+PNG
+format
+{p_end}
+
+{com}. 
+. * 2. Sensitivity to Subsamples
+. * Old Businesses Only
+. preserve
+{txt}
+{com}.     keep if any_old_biz == 1
+{txt}(4,775 observations deleted)
+
+{com}.     qreg bizprofit_1 treatment, quantile(50)
+
+{txt}Iteration 1:  WLS sum of weighted deviations = {res} 4591864.9
+
+{txt}Iteration 1:  Sum of abs. weighted deviations = {res} 4591491.4
+{txt}note: alternate solutions exist.
+Iteration 2:  Sum of abs. weighted deviations = {res} 4345583.6
+{txt}note: alternate solutions exist.
+Iteration 3:  Sum of abs. weighted deviations = {res} 4336427.3
+
+{txt}Median regression{col 53}Number of obs = {res}     1,624
+{txt}  Raw sum of deviations{res}  4336517{txt} (about {res}1469{txt})
+  Min sum of deviations{res}  4336427{col 53}{txt}Pseudo R2     = {res}    0.0000
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1} bizprofit_1{col 14}{c |} Coefficient{col 26}  Std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}treatment {c |}{col 14}{res}{space 2}      -50{col 26}{space 2} 215.5594{col 37}{space 1}   -0.23{col 46}{space 3}0.817{col 54}{space 4}-472.8042{col 67}{space 3} 372.8042
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2}     1500{col 26}{space 2} 156.4987{col 37}{space 1}    9.58{col 46}{space 3}0.000{col 54}{space 4} 1193.039{col 67}{space 3} 1806.961
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+{com}.     estimates store old_biz
+{txt}
+{com}.     graph export "quantile_old_biz.png", replace
+{txt}{p 0 4 2}
+file {bf}
+/Users/felix/KTH/AppliedEconometrics/Project/Output/quantile_old_biz.png{rm}
+saved as
+PNG
+format
+{p_end}
+
+{com}. restore
+{txt}
+{com}. 
+. * New Businesses Only
+. preserve
+{txt}
+{com}.     keep if any_old_biz == 0
+{txt}(2,212 observations deleted)
+
+{com}.     qreg bizprofit_1 treatment, quantile(50)
+
+{txt}Iteration 1:  WLS sum of weighted deviations = {res}  493409.8
+
+{txt}Iteration 1:  Sum of abs. weighted deviations = {res} 502838.67
+{txt}Iteration 2:  Sum of abs. weighted deviations = {res} 502838.67
+{txt}Iteration 3:  Sum of abs. weighted deviations = {res} 479068.17
+
+{txt}Median regression{col 53}Number of obs = {res}     4,602
+{txt}  Raw sum of deviations{res} 479068.2{txt} (about {res}0{txt})
+  Min sum of deviations{res} 479068.2{col 53}{txt}Pseudo R2     = {res}    0.0000
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1} bizprofit_1{col 14}{c |} Coefficient{col 26}  Std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}treatment {c |}{col 14}{res}{space 2}        0{col 26}{txt}  (omitted)
+{space 7}_cons {c |}{col 14}{res}{space 2}        0{col 26}{txt}  (omitted)
+{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+{com}.     estimates store new_biz
+{txt}
+{com}.     graph export "quantile_new_biz.png", replace
+{txt}{p 0 4 2}
+file {bf}
+/Users/felix/KTH/AppliedEconometrics/Project/Output/quantile_new_biz.png{rm}
+saved as
+PNG
+format
+{p_end}
+
+{com}. restore
+{txt}
+{com}. 
+. * 3. Sensitivity to Outliers (Winsorize)
+. summarize bizprofit_1, detail
+
+       {txt}Business profits (last 30 days, Rs.), endline 1
+{hline 61}
+      Percentiles      Smallest
+ 1%    {res}    -6390        -188960
+{txt} 5%    {res}      -35        -146000
+{txt}10%    {res}        0         -80500       {txt}Obs         {res}      6,239
+{txt}25%    {res}        0         -78000       {txt}Sum of wgt. {res}      6,239
+
+{txt}50%    {res}        0                      {txt}Mean          {res} 968.1759
+                        {txt}Largest       Std. dev.     {res} 11842.52
+{txt}75%    {res}        0         222750
+{txt}90%    {res}     3000         397690       {txt}Variance      {res} 1.40e+08
+{txt}95%    {res}     6000         456000       {txt}Skewness      {res} 25.43733
+{txt}99%    {res}    18400         465500       {txt}Kurtosis      {res} 974.5709
+{txt}
+{com}. local p0_5 = r(p1)  // Lower percentile
+{txt}
+{com}. local p99_5 = r(p99)  // Upper percentile
+{txt}
+{com}. gen bizprofit_1_wins = bizprofit_1
+{txt}(624 missing values generated)
+
+{com}. replace bizprofit_1_wins = `p0_5' if bizprofit_1 < `p0_5' & !missing(bizprofit_1)
+{txt}(62 real changes made)
+
+{com}. replace bizprofit_1_wins = `p99_5' if bizprofit_1 > `p99_5' & !missing(bizprofit_1)
+{txt}(62 real changes made)
+
+{com}. qreg bizprofit_1_wins treatment, quantile(50)
+
+{txt}Iteration 1:  WLS sum of weighted deviations = {res} 4027262.5
+
+{txt}Iteration 1:  Sum of abs. weighted deviations = {res}   4031218
+{txt}Iteration 2:  Sum of abs. weighted deviations = {res} 3572303.5
+{txt}note: alternate solutions exist.
+Iteration 3:  Sum of abs. weighted deviations = {res}   3259193
+
+{txt}Median regression{col 53}Number of obs = {res}     6,239
+{txt}  Raw sum of deviations{res}  3259193{txt} (about {res}0{txt})
+  Min sum of deviations{res}  3259193{col 53}{txt}Pseudo R2     = {res}    0.0000
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}bizprofit_~s{col 14}{c |} Coefficient{col 26}  Std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}treatment {c |}{col 14}{res}{space 2}        0{col 26}{txt}  (omitted)
+{space 7}_cons {c |}{col 14}{res}{space 2}        0{col 26}{txt}  (omitted)
+{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+{com}. graph export "quantile_winsorized.png", replace
+{txt}{p 0 4 2}
+file {bf}
+/Users/felix/KTH/AppliedEconometrics/Project/Output/quantile_winsorized.png{rm}
+saved as
+PNG
+format
+{p_end}
+
+{com}. 
+. * 4. Bootstrapped Standard Errors
+. set seed 123  // Set the seed for reproducibility
+{txt}
+{com}. bootstrap _b, reps(500): qreg bizprofit_1 treatment, quantile(50)
+{res}{txt}(running {bf:qreg} on estimation sample)
+{res}
+{text}Bootstrap replications ({result:500}){text}: {res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}10{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}20{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}30{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}40{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}50{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}60{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}70{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}80{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}90{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}100{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}110{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}120{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}130{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}140{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}150{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}160{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}170{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}180{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}190{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}200{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}210{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}220{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}230{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}240{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}250{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}260{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}270{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}280{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}290{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}300{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}310{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}320{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}330{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}340{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}350{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}360{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}370{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}380{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}390{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}400{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}410{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}420{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}430{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}440{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}450{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}460{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}470{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}480{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}490{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}500{text} done
+{res}
+{txt}Median regression{col 53}Number of obs = {res}     6,239
+{txt}  Raw sum of deviations{res}  5136784{txt} (about {res}0{txt})
+  Min sum of deviations{res}  5136784{col 53}{txt}Pseudo R2     = {res}    0.0000
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}   Observed{col 26}   Bootstrap{col 54}         Norm{col 67}al-based
+{col 1} bizprofit_1{col 14}{c |} coefficient{col 26}  std. err.{col 38}      z{col 46}   P>|z|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}treatment {c |}{col 14}{res}{space 2}        0{col 26}{txt}  (omitted)
+{space 7}_cons {c |}{col 14}{res}{space 2}        0{col 26}{txt}  (omitted)
+{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+{com}. graph export "bootstrap_ci.png", replace
+{err}could not find Graph window
+{txt}{search r(693), local:r(693);}
 
 end of do-file
 
-{search r(111), local:r(111);}
+{search r(693), local:r(693);}
 
-{com}. do "/var/folders/3z/wxsh3hjn0_57l7qsmjtjjb5w0000gn/T//SD35444.000000"
+{com}. 
+
+. do "/Users/felix/KTH/AppliedEconometrics/Project/sensitivity_analysis_figures.do"
 {txt}
 {com}. 
 . /*******************************************************************************
