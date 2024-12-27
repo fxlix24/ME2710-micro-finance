@@ -1,9 +1,9 @@
 {smcl}
-{com}{sf}{ul off}{txt}{.-}
+{txt}{sf}{ul off}{.-}
       name:  {res}<unnamed>
        {txt}log:  {res}/Users/felix/KTH/AppliedEconometrics/Project/sensitivity_analysis_log.smcl
   {txt}log type:  {res}smcl
- {txt}opened on:  {res}18 Dec 2024, 12:07:43
+ {txt}opened on:  {res}27 Dec 2024, 09:36:42
 {txt}
 {com}. cd "$outputdir"
 {res}/Users/felix/KTH/AppliedEconometrics/Project/Output
@@ -19,118 +19,54 @@
 
 {com}. 
 . * 1. Sensitivity to Quantile Levels
-. local quantiles 0.10 0.25 0.50 0.75 0.90
+. * Define the quantiles to analyze
+. local quantiles 0.05 0.10 0.25 0.50 0.75 0.90 0.95
 {txt}
-{com}. foreach q of local quantiles {c -(}
-{txt}  2{com}.     local qname = subinstr("`q'", ".", "_", .)   // Replace "." with "_"
-{txt}  3{com}.     quietly qreg bizprofit_1 treatment, quantile(`q')
-{txt}  4{com}.     estimates store quantile_`qname'
-{txt}  5{com}.     estimates table quantile_`qname', stats(rmse) title("Quantile: `q'")
-{txt}  6{com}.     
-.     * Generate a simple scatter plot for treatment effect (example graph)
-.     predict yhat_`qname' if e(sample), xb
-{txt}  7{com}.     twoway scatter yhat_`qname' treatment, ///
->         title("Quantile Regression: `q'") ///
->         ytitle("Predicted Outcome") xtitle("Treatment")
-{txt}  8{com}.     
-.     graph export "quantile_sensitivity_`qname'.png", replace
+{com}. 
+. * Loop through quantiles to calculate results and print them
+. foreach q of local quantiles {c -(}
+{txt}  2{com}.     * Run quantile regression
+.     quietly qreg bizprofit_2 treatment, quantile(`q')
+{txt}  3{com}. 
+.     * Extract the treatment coefficient and standard error
+.     scalar coeff = _b[treatment]
+{txt}  4{com}.     scalar stderr = _se[treatment]
+{txt}  5{com}. 
+.     * Print the results to the console
+.     di "Quantile: `q'"
+{txt}  6{com}.     di "  Coefficient: " coeff
+{txt}  7{com}.     di "  Standard Error: " stderr
+{txt}  8{com}.     di "---------------------------------"
 {txt}  9{com}. {c )-}
-{res}
-{txt}{p}Quantile: 0.10
-
-{hline 12}{c -}{c TT}{c -}{hline 10}{c -}{c -}
-{ralign 12:Variable} {c |} {center 10:quantil~10} {space 1}
-{hline 12}{c -}{c +}{c -}{hline 10}{c -}{c -}
-{res}{txt}{space 3}treatment {c |}{res} {ralign 10:0}{txt} {space 1}
-{res}{txt}{space 7}_cons {c |}{res} {ralign 10:0}{txt} {space 1}
-{res}{txt}{hline 12}{c -}{c +}{c -}{hline 10}{c -}{c -}
-{ralign 12:rmse} {c |}{res} {ralign 10:}{txt} {space 1}
-{res}{txt}{hline 12}{c -}{c BT}{c -}{hline 10}{c -}{c -}
-{res}{txt}(624 missing values generated)
-{res}{txt}{p 0 4 2}
-file {bf}
-/Users/felix/KTH/AppliedEconometrics/Project/Output/quantile_sensitivity_0_10.png{rm}
-saved as
-PNG
-format
-{p_end}
-{res}
-{txt}{p}Quantile: 0.25
-
-{hline 12}{c -}{c TT}{c -}{hline 10}{c -}{c -}
-{ralign 12:Variable} {c |} {center 10:quantil~25} {space 1}
-{hline 12}{c -}{c +}{c -}{hline 10}{c -}{c -}
-{res}{txt}{space 3}treatment {c |}{res} {ralign 10:0}{txt} {space 1}
-{res}{txt}{space 7}_cons {c |}{res} {ralign 10:0}{txt} {space 1}
-{res}{txt}{hline 12}{c -}{c +}{c -}{hline 10}{c -}{c -}
-{ralign 12:rmse} {c |}{res} {ralign 10:}{txt} {space 1}
-{res}{txt}{hline 12}{c -}{c BT}{c -}{hline 10}{c -}{c -}
-{res}{txt}(624 missing values generated)
-{res}{txt}{p 0 4 2}
-file {bf}
-/Users/felix/KTH/AppliedEconometrics/Project/Output/quantile_sensitivity_0_25.png{rm}
-saved as
-PNG
-format
-{p_end}
-{res}
-{txt}{p}Quantile: 0.50
-
-{hline 12}{c -}{c TT}{c -}{hline 10}{c -}{c -}
-{ralign 12:Variable} {c |} {center 10:quantil~50} {space 1}
-{hline 12}{c -}{c +}{c -}{hline 10}{c -}{c -}
-{res}{txt}{space 3}treatment {c |}{res} {ralign 10:0}{txt} {space 1}
-{res}{txt}{space 7}_cons {c |}{res} {ralign 10:0}{txt} {space 1}
-{res}{txt}{hline 12}{c -}{c +}{c -}{hline 10}{c -}{c -}
-{ralign 12:rmse} {c |}{res} {ralign 10:}{txt} {space 1}
-{res}{txt}{hline 12}{c -}{c BT}{c -}{hline 10}{c -}{c -}
-{res}{txt}(624 missing values generated)
-{res}{txt}{p 0 4 2}
-file {bf}
-/Users/felix/KTH/AppliedEconometrics/Project/Output/quantile_sensitivity_0_50.png{rm}
-saved as
-PNG
-format
-{p_end}
-{res}
-{txt}{p}Quantile: 0.75
-
-{hline 12}{c -}{c TT}{c -}{hline 10}{c -}{c -}
-{ralign 12:Variable} {c |} {center 10:quantil~75} {space 1}
-{hline 12}{c -}{c +}{c -}{hline 10}{c -}{c -}
-{res}{txt}{space 3}treatment {c |}{res} {ralign 10:0}{txt} {space 1}
-{res}{txt}{space 7}_cons {c |}{res} {ralign 10:0}{txt} {space 1}
-{res}{txt}{hline 12}{c -}{c +}{c -}{hline 10}{c -}{c -}
-{ralign 12:rmse} {c |}{res} {ralign 10:}{txt} {space 1}
-{res}{txt}{hline 12}{c -}{c BT}{c -}{hline 10}{c -}{c -}
-{res}{txt}(624 missing values generated)
-{res}{txt}{p 0 4 2}
-file {bf}
-/Users/felix/KTH/AppliedEconometrics/Project/Output/quantile_sensitivity_0_75.png{rm}
-saved as
-PNG
-format
-{p_end}
-{res}
-{txt}{p}Quantile: 0.90
-
-{hline 12}{c -}{c TT}{c -}{hline 10}{c -}{c -}
-{ralign 12:Variable} {c |} {center 10:quantil~90} {space 1}
-{hline 12}{c -}{c +}{c -}{hline 10}{c -}{c -}
-{res}{txt}{space 3}treatment {c |}{res} {ralign 10:0}{txt} {space 1}
-{res}{txt}{space 7}_cons {c |}{res} {ralign 10:3000}{txt} {space 1}
-{res}{txt}{hline 12}{c -}{c +}{c -}{hline 10}{c -}{c -}
-{ralign 12:rmse} {c |}{res} {ralign 10:}{txt} {space 1}
-{res}{txt}{hline 12}{c -}{c BT}{c -}{hline 10}{c -}{c -}
-{res}{txt}(624 missing values generated)
-{res}{txt}{p 0 4 2}
-file {bf}
-/Users/felix/KTH/AppliedEconometrics/Project/Output/quantile_sensitivity_0_90.png{rm}
-saved as
-PNG
-format
-{p_end}
-
+Quantile: 0.05
+  Coefficient: -243.22986
+  Standard Error: 242.17697
+---------------------------------
+Quantile: 0.10
+  Coefficient: 0
+  Standard Error: 0
+---------------------------------
+Quantile: 0.25
+  Coefficient: 0
+  Standard Error: 0
+---------------------------------
+Quantile: 0.50
+  Coefficient: 0
+  Standard Error: 0
+---------------------------------
+Quantile: 0.75
+  Coefficient: 624.73419
+  Standard Error: 230.86807
+---------------------------------
+Quantile: 0.90
+  Coefficient: 499.7876
+  Standard Error: 511.50402
+---------------------------------
+Quantile: 0.95
+  Coefficient: 2249.043
+  Standard Error: 912.0925
+---------------------------------
+{txt}
 {com}. 
 . * 2. Sensitivity to Subsamples
 . * Old Businesses Only
@@ -139,29 +75,29 @@ format
 {com}.     keep if any_old_biz == 1
 {txt}(4,775 observations deleted)
 
-{com}.     qreg bizprofit_1 treatment, quantile(50)
+{com}.         drop if missing(bizprofit_2)
+{txt}(244 observations deleted)
 
-{txt}Iteration 1:  WLS sum of weighted deviations = {res} 4591864.9
+{com}.     reg bizprofit_2 treatment
 
-{txt}Iteration 1:  Sum of abs. weighted deviations = {res} 4591491.4
-{txt}note: alternate solutions exist.
-Iteration 2:  Sum of abs. weighted deviations = {res} 4345583.6
-{txt}note: alternate solutions exist.
-Iteration 3:  Sum of abs. weighted deviations = {res} 4336427.3
-
-{txt}Median regression{col 53}Number of obs = {res}     1,624
-{txt}  Raw sum of deviations{res}  4336517{txt} (about {res}1469{txt})
-  Min sum of deviations{res}  4336427{col 53}{txt}Pseudo R2     = {res}    0.0000
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}     1,844
+{txt}{hline 13}{c +}{hline 34}   F(1, 1842)      = {res}     2.01
+{txt}       Model {c |} {res}  478529918         1   478529918   {txt}Prob > F        ={res}    0.1568
+{txt}    Residual {c |} {res} 4.3933e+11     1,842   238508064   {txt}R-squared       ={res}    0.0011
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0005
+{txt}       Total {c |} {res} 4.3981e+11     1,843   238638299   {txt}Root MSE        =   {res}  15444
 
 {txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1} bizprofit_1{col 14}{c |} Coefficient{col 26}  Std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{col 1} bizprofit_2{col 14}{c |} Coefficient{col 26}  Std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
 {hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 3}treatment {c |}{col 14}{res}{space 2}      -50{col 26}{space 2} 215.5594{col 37}{space 1}   -0.23{col 46}{space 3}0.817{col 54}{space 4}-472.8042{col 67}{space 3} 372.8042
-{txt}{space 7}_cons {c |}{col 14}{res}{space 2}     1500{col 26}{space 2} 156.4987{col 37}{space 1}    9.58{col 46}{space 3}0.000{col 54}{space 4} 1193.039{col 67}{space 3} 1806.961
+{space 3}treatment {c |}{col 14}{res}{space 2} 1021.377{col 26}{space 2} 721.0793{col 37}{space 1}    1.42{col 46}{space 3}0.157{col 54}{space 4}-392.8418{col 67}{space 3} 2435.596
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 1948.239{col 26}{space 2}  527.547{col 37}{space 1}    3.69{col 46}{space 3}0.000{col 54}{space 4} 913.5857{col 67}{space 3} 2982.891
 {txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-
+{res}{txt}
 {com}.     estimates store old_biz
 {txt}
+{com}.         twoway scatter bizprofit_2 treatment
+{res}{txt}
 {com}.     graph export "quantile_old_biz.png", replace
 {txt}{p 0 4 2}
 file {bf}
@@ -180,27 +116,29 @@ format
 {com}.     keep if any_old_biz == 0
 {txt}(2,212 observations deleted)
 
-{com}.     qreg bizprofit_1 treatment, quantile(50)
+{com}.         drop if missing(bizprofit_2)
+{txt}(507 observations deleted)
 
-{txt}Iteration 1:  WLS sum of weighted deviations = {res}  493409.8
+{com}.     reg bizprofit_2 treatment
 
-{txt}Iteration 1:  Sum of abs. weighted deviations = {res} 502838.67
-{txt}Iteration 2:  Sum of abs. weighted deviations = {res} 502838.67
-{txt}Iteration 3:  Sum of abs. weighted deviations = {res} 479068.17
-
-{txt}Median regression{col 53}Number of obs = {res}     4,602
-{txt}  Raw sum of deviations{res} 479068.2{txt} (about {res}0{txt})
-  Min sum of deviations{res} 479068.2{col 53}{txt}Pseudo R2     = {res}    0.0000
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}     4,144
+{txt}{hline 13}{c +}{hline 34}   F(1, 4142)      = {res}     3.65
+{txt}       Model {c |} {res}  169365648         1   169365648   {txt}Prob > F        ={res}    0.0562
+{txt}    Residual {c |} {res} 1.9224e+11     4,142  46413311.7   {txt}R-squared       ={res}    0.0009
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0006
+{txt}       Total {c |} {res} 1.9241e+11     4,143  46442988.8   {txt}Root MSE        =   {res} 6812.7
 
 {txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1} bizprofit_1{col 14}{c |} Coefficient{col 26}  Std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{col 1} bizprofit_2{col 14}{c |} Coefficient{col 26}  Std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
 {hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 3}treatment {c |}{col 14}{res}{space 2}        0{col 26}{txt}  (omitted)
-{space 7}_cons {c |}{col 14}{res}{space 2}        0{col 26}{txt}  (omitted)
-{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-
+{space 3}treatment {c |}{col 14}{res}{space 2} 404.5851{col 26}{space 2} 211.7964{col 37}{space 1}    1.91{col 46}{space 3}0.056{col 54}{space 4}-10.64948{col 67}{space 3} 819.8198
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 519.6834{col 26}{space 2} 152.4135{col 37}{space 1}    3.41{col 46}{space 3}0.001{col 54}{space 4}  220.871{col 67}{space 3} 818.4957
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
 {com}.     estimates store new_biz
 {txt}
+{com}.         twoway scatter bizprofit_2 treatment
+{res}{txt}
 {com}.     graph export "quantile_new_biz.png", replace
 {txt}{p 0 4 2}
 file {bf}
@@ -214,108 +152,117 @@ format
 {txt}
 {com}. 
 . * 3. Sensitivity to Outliers (Winsorize)
-. summarize bizprofit_1, detail
+. summarize bizprofit_2, detail
 
-       {txt}Business profits (last 30 days, Rs.), endline 1
+       {txt}Business profits (last 30 days, Rs.), endline 2
 {hline 61}
       Percentiles      Smallest
- 1%    {res}    -6390        -188960
-{txt} 5%    {res}      -35        -146000
-{txt}10%    {res}        0         -80500       {txt}Obs         {res}      6,239
-{txt}25%    {res}        0         -78000       {txt}Sum of wgt. {res}      6,239
+ 1%    {res}-16243.09      -206062.3
+{txt} 5%    {res}-166.5958      -201147.8
+{txt}10%    {res}        0      -188169.9       {txt}Obs         {res}      6,090
+{txt}25%    {res}        0      -168861.5       {txt}Sum of wgt. {res}      6,090
 
-{txt}50%    {res}        0                      {txt}Mean          {res} 968.1759
-                        {txt}Largest       Std. dev.     {res} 11842.52
-{txt}75%    {res}        0         222750
-{txt}90%    {res}     3000         397690       {txt}Variance      {res} 1.40e+08
-{txt}95%    {res}     6000         456000       {txt}Skewness      {res} 25.43733
-{txt}99%    {res}    18400         465500       {txt}Kurtosis      {res} 974.5709
+{txt}50%    {res}        0                      {txt}Mean          {res} 1272.361
+                        {txt}Largest       Std. dev.     {res} 10515.26
+{txt}75%    {res} 1249.468       70207.63
+{txt}90%    {res} 6303.568          71303       {txt}Variance      {res} 1.11e+08
+{txt}95%    {res} 10828.73          71303       {txt}Skewness      {res}-7.303163
+{txt}99%    {res} 30986.82       80965.55       {txt}Kurtosis      {res} 134.1865
 {txt}
 {com}. local p0_5 = r(p1)  // Lower percentile
 {txt}
 {com}. local p99_5 = r(p99)  // Upper percentile
 {txt}
-{com}. gen bizprofit_1_wins = bizprofit_1
-{txt}(624 missing values generated)
+{com}. gen bizprofit_2_wins = bizprofit_2
+{txt}(773 missing values generated)
 
-{com}. replace bizprofit_1_wins = `p0_5' if bizprofit_1 < `p0_5' & !missing(bizprofit_1)
-{txt}(62 real changes made)
+{com}. replace bizprofit_2_wins = `p0_5' if bizprofit_2 < `p0_5' & !missing(bizprofit_2)
+{txt}(60 real changes made)
 
-{com}. replace bizprofit_1_wins = `p99_5' if bizprofit_1 > `p99_5' & !missing(bizprofit_1)
-{txt}(62 real changes made)
+{com}. replace bizprofit_2_wins = `p99_5' if bizprofit_2 > `p99_5' & !missing(bizprofit_2)
+{txt}(59 real changes made)
 
-{com}. qreg bizprofit_1_wins treatment, quantile(50)
+{com}. reg bizprofit_2_wins treatment
 
-{txt}Iteration 1:  WLS sum of weighted deviations = {res} 4027262.5
-
-{txt}Iteration 1:  Sum of abs. weighted deviations = {res}   4031218
-{txt}Iteration 2:  Sum of abs. weighted deviations = {res} 3572303.5
-{txt}note: alternate solutions exist.
-Iteration 3:  Sum of abs. weighted deviations = {res}   3259193
-
-{txt}Median regression{col 53}Number of obs = {res}     6,239
-{txt}  Raw sum of deviations{res}  3259193{txt} (about {res}0{txt})
-  Min sum of deviations{res}  3259193{col 53}{txt}Pseudo R2     = {res}    0.0000
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}     6,090
+{txt}{hline 13}{c +}{hline 34}   F(1, 6088)      = {res}     7.04
+{txt}       Model {c |} {res}  197947545         1   197947545   {txt}Prob > F        ={res}    0.0080
+{txt}    Residual {c |} {res} 1.7120e+11     6,088  28120622.4   {txt}R-squared       ={res}    0.0012
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0010
+{txt}       Total {c |} {res} 1.7140e+11     6,089  28148513.1   {txt}Root MSE        =   {res} 5302.9
 
 {txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
 {col 1}bizprofit_~s{col 14}{c |} Coefficient{col 26}  Std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
 {hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 3}treatment {c |}{col 14}{res}{space 2}        0{col 26}{txt}  (omitted)
-{space 7}_cons {c |}{col 14}{res}{space 2}        0{col 26}{txt}  (omitted)
-{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}treatment {c |}{col 14}{res}{space 2} 360.9201{col 26}{space 2} 136.0343{col 37}{space 1}    2.65{col 46}{space 3}0.008{col 54}{space 4} 94.24473{col 67}{space 3} 627.5955
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 1436.016{col 26}{space 2} 98.26905{col 37}{space 1}   14.61{col 46}{space 3}0.000{col 54}{space 4} 1243.374{col 67}{space 3} 1628.659
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. *graph export "quantile_winsorized.png", replace
+. 
+. 
+. * 4. Bootstrapped Standard Errors
+. set seed 123  // Set the seed for reproducibility
+{txt}
+{com}. *bootstrap _b, reps(500): qreg bizprofit_2 treatment, quantile(95)
+. bootstrap _b, reps(500) saving(boot_results, replace): qreg bizprofit_2 treatment, quantile(95)
+{res}{txt}(running {bf:qreg} on estimation sample)
+{res}
+{text}Bootstrap replications ({result:500}){text}: {res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}10{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}20{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}30{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}40{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}50{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}60{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}70{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}80{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}90{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}100{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}110{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}120{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}130{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}140{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}150{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}160{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}170{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}180{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}190{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}200{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}210{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}220{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}230{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}240{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}250{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}260{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}270{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}280{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}290{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}300{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}310{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}320{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}330{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}340{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}350{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}360{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}370{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}380{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}390{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}400{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}410{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}420{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}430{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}440{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}450{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}460{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}470{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}480{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}490{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}500{text} done
+{res}
+{txt}.95 Quantile regression{col 53}Number of obs = {res}     6,090
+{txt}  Raw sum of deviations{res}  6499782{txt} (about {res}10828.726{txt})
+  Min sum of deviations{res}  6469052{col 53}{txt}Pseudo R2     = {res}    0.0047
 
-{com}. graph export "quantile_winsorized.png", replace
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}   Observed{col 26}   Bootstrap{col 54}         Norm{col 67}al-based
+{col 1} bizprofit_2{col 14}{c |} coefficient{col 26}  std. err.{col 38}      z{col 46}   P>|z|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}treatment {c |}{col 14}{res}{space 2} 2249.043{col 26}{space 2} 741.4628{col 37}{space 1}    3.03{col 46}{space 3}0.002{col 54}{space 4} 795.8026{col 67}{space 3} 3702.283
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 9829.151{col 26}{space 2} 440.9977{col 37}{space 1}   22.29{col 46}{space 3}0.000{col 54}{space 4} 8964.812{col 67}{space 3} 10693.49
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+{com}. use boot_results, clear
+{txt}(bootstrap: qreg)
+
+{com}. histogram _b_treatment, normal title("Bootstrap Coefficient Distribution")
+{txt}(bin={res}22{txt}, start={res}441.47852{txt}, width={res}196.69664{txt})
+{res}{txt}
+{com}. graph export "bootstrap_ci.png", replace 
 {txt}{p 0 4 2}
 file {bf}
-/Users/felix/KTH/AppliedEconometrics/Project/Output/quantile_winsorized.png{rm}
+/Users/felix/KTH/AppliedEconometrics/Project/Output/bootstrap_ci.png{rm}
 saved as
 PNG
 format
 {p_end}
 
 {com}. 
-. * 4. Bootstrapped Standard Errors
-. set seed 123  // Set the seed for reproducibility
-{txt}
-{com}. bootstrap _b, reps(500): qreg bizprofit_1 treatment, quantile(50)
-{res}{txt}(running {bf:qreg} on estimation sample)
-{res}
-{text}Bootstrap replications ({result:500}){text}: {res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}10{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}20{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}30{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}40{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}50{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}60{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}70{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}80{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}90{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}100{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}110{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}120{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}130{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}140{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}150{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}160{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}170{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}180{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}190{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}200{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}210{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}220{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}230{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}240{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}250{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}260{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}270{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}280{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}290{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}300{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}310{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}320{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}330{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}340{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}350{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}360{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}370{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}380{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}390{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}400{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}410{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}420{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}430{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}440{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}450{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}460{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}470{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}480{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}490{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}500{text} done
-{res}
-{txt}Median regression{col 53}Number of obs = {res}     6,239
-{txt}  Raw sum of deviations{res}  5136784{txt} (about {res}0{txt})
-  Min sum of deviations{res}  5136784{col 53}{txt}Pseudo R2     = {res}    0.0000
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 14}{c |}   Observed{col 26}   Bootstrap{col 54}         Norm{col 67}al-based
-{col 1} bizprofit_1{col 14}{c |} coefficient{col 26}  std. err.{col 38}      z{col 46}   P>|z|{col 54}     [95% con{col 67}f. interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 3}treatment {c |}{col 14}{res}{space 2}        0{col 26}{txt}  (omitted)
-{space 7}_cons {c |}{col 14}{res}{space 2}        0{col 26}{txt}  (omitted)
-{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-
-{com}. graph export "bootstrap_ci.png", replace
-{err}could not find Graph window
-{txt}{search r(693), local:r(693);}
+. * 5. Alternative Specifications
+. * Log Transformation
+. gen log_bizprofit = log(bizprofit_2 + 1)   // Adding 1 to avoid log(0)
+{err}bizprofit_2 not found
+{txt}{search r(111), local:r(111);}
 
 end of do-file
 
-{search r(693), local:r(693);}
+{search r(111), local:r(111);}
 
-{com}. 
-
-. do "/Users/felix/KTH/AppliedEconometrics/Project/sensitivity_analysis_figures.do"
+{com}. do "/Users/felix/KTH/AppliedEconometrics/Project/Robustness.do"
 {txt}
-{com}. 
-. /*******************************************************************************
-> Program Name:    sensitivity_analysis.do
-> Contact:         Felix (Created for further analysis)
-> Purpose:         Conducts sensitivity analysis on quantile treatment effect regressions
->                  for "The miracle of microfinance?" replication project.
-> *******************************************************************************/
+{com}. ********************************************************************************
+. ********** Table 1A: Baseline Summary Statistics (Excluding Outliers) ***********
+. ********************************************************************************
 . 
-. version 13.1
+. * DATA DIRECTORY
+. global datadir "/Users/felix/KTH/AppliedEconometrics/Project/DATA"
 {txt}
-{com}. cap log close
+{com}. 
+. *OUTPUT DIRECTORY
+. global outputdir "/Users/felix/KTH/AppliedEconometrics/Project/Replication"
+{txt}
+{com}. 
+. *LOGFILE*
+. capture log close
 {smcl}
 {com}{sf}{ul off}

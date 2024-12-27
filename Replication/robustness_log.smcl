@@ -1,348 +1,15 @@
 {smcl}
-{com}{sf}{ul off}{txt}{.-}
+{txt}{sf}{ul off}{.-}
       name:  {res}<unnamed>
-       {txt}log:  {res}/Users/felix/KTH/AppliedEconometrics/Project/Output/sensitivity_analysis_log.smcl
+       {txt}log:  {res}/Users/felix/KTH/AppliedEconometrics/Project/Replication/robustness_log.smcl
   {txt}log type:  {res}smcl
- {txt}opened on:  {res}27 Dec 2024, 09:17:45
+ {txt}opened on:  {res}27 Dec 2024, 09:34:38
 {txt}
 {com}. cd "$outputdir"
-{res}/Users/felix/KTH/AppliedEconometrics/Project/Output
+{res}/Users/felix/KTH/AppliedEconometrics/Project/Replication
 {txt}
 {com}. 
-. ********************************************************************************
-. ******* Sensitivity Analysis: Quantile Treatment Effect Regressions ************
-. ********************************************************************************
-. 
-. * Load the dataset
-. use "$datadir/2013-0533_data_endlines1and2.dta", clear
-{txt}(Endline data for "The miracle of microfinance?" (Banerjee et al.), AEJ 2014)
-
-{com}. 
-. * 1. Sensitivity to Quantile Levels
-. * Define the quantiles to analyze
-. local quantiles 0.05 0.10 0.25 0.50 0.75 0.90 0.95
-{txt}
-{com}. 
-. * Loop through quantiles to calculate results and print them
-. foreach q of local quantiles {c -(}
-{txt}  2{com}.     * Run quantile regression
-.     quietly qreg bizprofit_2 treatment, quantile(`q')
-{txt}  3{com}. 
-.     * Extract the treatment coefficient and standard error
-.     scalar coeff = _b[treatment]
-{txt}  4{com}.     scalar stderr = _se[treatment]
-{txt}  5{com}. 
-.     * Print the results to the console
-.     di "Quantile: `q'"
-{txt}  6{com}.     di "  Coefficient: " coeff
-{txt}  7{com}.     di "  Standard Error: " stderr
-{txt}  8{com}.     di "---------------------------------"
-{txt}  9{com}. {c )-}
-Quantile: 0.05
-  Coefficient: -243.22986
-  Standard Error: 242.17697
----------------------------------
-Quantile: 0.10
-  Coefficient: 0
-  Standard Error: 0
----------------------------------
-Quantile: 0.25
-  Coefficient: 0
-  Standard Error: 0
----------------------------------
-Quantile: 0.50
-  Coefficient: 0
-  Standard Error: 0
----------------------------------
-Quantile: 0.75
-  Coefficient: 624.73419
-  Standard Error: 230.86807
----------------------------------
-Quantile: 0.90
-  Coefficient: 499.7876
-  Standard Error: 511.50402
----------------------------------
-Quantile: 0.95
-  Coefficient: 2249.043
-  Standard Error: 912.0925
----------------------------------
-{txt}
-{com}. 
-. * 2. Sensitivity to Subsamples
-. * Old Businesses Only
-. preserve
-{txt}
-{com}.     keep if any_old_biz == 1
-{txt}(4,775 observations deleted)
-
-{com}.         drop if missing(bizprofit_2)
-{txt}(244 observations deleted)
-
-{com}.     reg bizprofit_2 treatment
-
-{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}     1,844
-{txt}{hline 13}{c +}{hline 34}   F(1, 1842)      = {res}     2.01
-{txt}       Model {c |} {res}  478529918         1   478529918   {txt}Prob > F        ={res}    0.1568
-{txt}    Residual {c |} {res} 4.3933e+11     1,842   238508064   {txt}R-squared       ={res}    0.0011
-{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0005
-{txt}       Total {c |} {res} 4.3981e+11     1,843   238638299   {txt}Root MSE        =   {res}  15444
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1} bizprofit_2{col 14}{c |} Coefficient{col 26}  Std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 3}treatment {c |}{col 14}{res}{space 2} 1021.377{col 26}{space 2} 721.0793{col 37}{space 1}    1.42{col 46}{space 3}0.157{col 54}{space 4}-392.8418{col 67}{space 3} 2435.596
-{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 1948.239{col 26}{space 2}  527.547{col 37}{space 1}    3.69{col 46}{space 3}0.000{col 54}{space 4} 913.5857{col 67}{space 3} 2982.891
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}{txt}
-{com}.     estimates store old_biz
-{txt}
-{com}.         twoway scatter bizprofit_2 treatment
-{res}{txt}
-{com}.     graph export "quantile_old_biz.png", replace
-{txt}{p 0 4 2}
-file {bf}
-/Users/felix/KTH/AppliedEconometrics/Project/Output/quantile_old_biz.png{rm}
-saved as
-PNG
-format
-{p_end}
-
-{com}. restore
-{txt}
-{com}. 
-. * New Businesses Only
-. preserve
-{txt}
-{com}.     keep if any_old_biz == 0
-{txt}(2,212 observations deleted)
-
-{com}.         drop if missing(bizprofit_2)
-{txt}(507 observations deleted)
-
-{com}.     reg bizprofit_2 treatment
-
-{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}     4,144
-{txt}{hline 13}{c +}{hline 34}   F(1, 4142)      = {res}     3.65
-{txt}       Model {c |} {res}  169365648         1   169365648   {txt}Prob > F        ={res}    0.0562
-{txt}    Residual {c |} {res} 1.9224e+11     4,142  46413311.7   {txt}R-squared       ={res}    0.0009
-{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0006
-{txt}       Total {c |} {res} 1.9241e+11     4,143  46442988.8   {txt}Root MSE        =   {res} 6812.7
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1} bizprofit_2{col 14}{c |} Coefficient{col 26}  Std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 3}treatment {c |}{col 14}{res}{space 2} 404.5851{col 26}{space 2} 211.7964{col 37}{space 1}    1.91{col 46}{space 3}0.056{col 54}{space 4}-10.64948{col 67}{space 3} 819.8198
-{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 519.6834{col 26}{space 2} 152.4135{col 37}{space 1}    3.41{col 46}{space 3}0.001{col 54}{space 4}  220.871{col 67}{space 3} 818.4957
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}{txt}
-{com}.     estimates store new_biz
-{txt}
-{com}.         twoway scatter bizprofit_2 treatment
-{res}{txt}
-{com}.     graph export "quantile_new_biz.png", replace
-{txt}{p 0 4 2}
-file {bf}
-/Users/felix/KTH/AppliedEconometrics/Project/Output/quantile_new_biz.png{rm}
-saved as
-PNG
-format
-{p_end}
-
-{com}. restore
-{txt}
-{com}. 
-. * 3. Sensitivity to Outliers (Winsorize)
-. summarize bizprofit_2, detail
-
-       {txt}Business profits (last 30 days, Rs.), endline 2
-{hline 61}
-      Percentiles      Smallest
- 1%    {res}-16243.09      -206062.3
-{txt} 5%    {res}-166.5958      -201147.8
-{txt}10%    {res}        0      -188169.9       {txt}Obs         {res}      6,090
-{txt}25%    {res}        0      -168861.5       {txt}Sum of wgt. {res}      6,090
-
-{txt}50%    {res}        0                      {txt}Mean          {res} 1272.361
-                        {txt}Largest       Std. dev.     {res} 10515.26
-{txt}75%    {res} 1249.468       70207.63
-{txt}90%    {res} 6303.568          71303       {txt}Variance      {res} 1.11e+08
-{txt}95%    {res} 10828.73          71303       {txt}Skewness      {res}-7.303163
-{txt}99%    {res} 30986.82       80965.55       {txt}Kurtosis      {res} 134.1865
-{txt}
-{com}. local p0_5 = r(p1)  // Lower percentile
-{txt}
-{com}. local p99_5 = r(p99)  // Upper percentile
-{txt}
-{com}. gen bizprofit_2_wins = bizprofit_2
-{txt}(773 missing values generated)
-
-{com}. replace bizprofit_2_wins = `p0_5' if bizprofit_2 < `p0_5' & !missing(bizprofit_2)
-{txt}(60 real changes made)
-
-{com}. replace bizprofit_2_wins = `p99_5' if bizprofit_2 > `p99_5' & !missing(bizprofit_2)
-{txt}(59 real changes made)
-
-{com}. reg bizprofit_2_wins treatment
-
-{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}     6,090
-{txt}{hline 13}{c +}{hline 34}   F(1, 6088)      = {res}     7.04
-{txt}       Model {c |} {res}  197947545         1   197947545   {txt}Prob > F        ={res}    0.0080
-{txt}    Residual {c |} {res} 1.7120e+11     6,088  28120622.4   {txt}R-squared       ={res}    0.0012
-{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0010
-{txt}       Total {c |} {res} 1.7140e+11     6,089  28148513.1   {txt}Root MSE        =   {res} 5302.9
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}bizprofit_~s{col 14}{c |} Coefficient{col 26}  Std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 3}treatment {c |}{col 14}{res}{space 2} 360.9201{col 26}{space 2} 136.0343{col 37}{space 1}    2.65{col 46}{space 3}0.008{col 54}{space 4} 94.24473{col 67}{space 3} 627.5955
-{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 1436.016{col 26}{space 2} 98.26905{col 37}{space 1}   14.61{col 46}{space 3}0.000{col 54}{space 4} 1243.374{col 67}{space 3} 1628.659
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}{txt}
-{com}. *graph export "quantile_winsorized.png", replace
-. 
-. 
-. * 4. Bootstrapped Standard Errors
-. set seed 123  // Set the seed for reproducibility
-{txt}
-{com}. *bootstrap _b, reps(500): qreg bizprofit_2 treatment, quantile(95)
-. bootstrap _b, reps(500) saving(boot_results, replace): qreg bizprofit_2 treatment, quantile(95)
-{res}{txt}(running {bf:qreg} on estimation sample)
-{res}
-{text}Bootstrap replications ({result:500}){text}: {res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}10{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}20{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}30{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}40{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}50{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}60{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}70{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}80{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}90{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}100{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}110{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}120{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}130{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}140{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}150{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}160{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}170{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}180{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}190{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}200{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}210{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}220{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}230{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}240{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}250{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}260{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}270{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}280{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}290{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}300{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}310{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}320{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}330{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}340{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}350{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}360{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}370{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}380{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}390{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}400{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}410{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}420{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}430{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}440{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}450{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}460{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}470{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}480{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}490{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}.{res}{text}500{text} done
-{res}
-{txt}.95 Quantile regression{col 53}Number of obs = {res}     6,090
-{txt}  Raw sum of deviations{res}  6499782{txt} (about {res}10828.726{txt})
-  Min sum of deviations{res}  6469052{col 53}{txt}Pseudo R2     = {res}    0.0047
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 14}{c |}   Observed{col 26}   Bootstrap{col 54}         Norm{col 67}al-based
-{col 1} bizprofit_2{col 14}{c |} coefficient{col 26}  std. err.{col 38}      z{col 46}   P>|z|{col 54}     [95% con{col 67}f. interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 3}treatment {c |}{col 14}{res}{space 2} 2249.043{col 26}{space 2} 741.4628{col 37}{space 1}    3.03{col 46}{space 3}0.002{col 54}{space 4} 795.8026{col 67}{space 3} 3702.283
-{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 9829.151{col 26}{space 2} 440.9977{col 37}{space 1}   22.29{col 46}{space 3}0.000{col 54}{space 4} 8964.812{col 67}{space 3} 10693.49
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-
-{com}. use boot_results, clear
-{txt}(bootstrap: qreg)
-
-{com}. histogram _b_treatment, normal title("Bootstrap Coefficient Distribution")
-{txt}(bin={res}22{txt}, start={res}441.47852{txt}, width={res}196.69664{txt})
-{res}{txt}
-{com}. graph export "bootstrap_ci.png", replace 
-{txt}{p 0 4 2}
-file {bf}
-/Users/felix/KTH/AppliedEconometrics/Project/Output/bootstrap_ci.png{rm}
-saved as
-PNG
-format
-{p_end}
-
-{com}. 
-. * 5. Alternative Specifications
-. * Log Transformation
-. gen log_bizprofit = log(bizprofit_2 + 1)   // Adding 1 to avoid log(0)
-{err}bizprofit_2 not found
-{txt}{search r(111), local:r(111);}
-
-end of do-file
-
-{search r(111), local:r(111);}
-
-{com}. do "/Users/felix/KTH/AppliedEconometrics/Project/Robustness.do"
-{txt}
-{com}. ********************************************************************************
-. ********** Table 1A: Baseline Summary Statistics (Excluding Outliers) ***********
-. ********************************************************************************
-. 
-. * DATA DIRECTORY
-. global datadir "/Users/felix/KTH/AppliedEconometrics/Project/DATA"
-{txt}
-{com}. 
-. *OUTPUT DIRECTORY
-. global outputdir "/Users/felix/KTH/AppliedEconometrics/Project/Replication"
-{txt}
-{com}. 
-. *LOGFILE*
-. log using robustness_log.smcl, replace
-{err}log file already open
-{txt}{search r(604), local:r(604);}
-
-end of do-file
-
-{search r(604), local:r(604);}
-
-{com}. do "/Users/felix/KTH/AppliedEconometrics/Project/Robustness.do"
-{txt}
-{com}. ********************************************************************************
-. ********** Table 1A: Baseline Summary Statistics (Excluding Outliers) ***********
-. ********************************************************************************
-. 
-. * DATA DIRECTORY
-. global datadir "/Users/felix/KTH/AppliedEconometrics/Project/DATA"
-{txt}
-{com}. 
-. *OUTPUT DIRECTORY
-. global outputdir "/Users/felix/KTH/AppliedEconometrics/Project/Replication"
-{txt}
-{com}. 
-. *LOGFILE*
-. log using robustness_log.smcl, close
-{err}option {bf:close} not allowed
-{txt}{search r(198), local:r(198);}
-
-end of do-file
-
-{search r(198), local:r(198);}
-
-{com}. do "/Users/felix/KTH/AppliedEconometrics/Project/Robustness.do"
-{txt}
-{com}. ********************************************************************************
-. ********** Table 1A: Baseline Summary Statistics (Excluding Outliers) ***********
-. ********************************************************************************
-. 
-. * DATA DIRECTORY
-. global datadir "/Users/felix/KTH/AppliedEconometrics/Project/DATA"
-{txt}
-{com}. 
-. *OUTPUT DIRECTORY
-. global outputdir "/Users/felix/KTH/AppliedEconometrics/Project/Replication"
-{txt}
-{com}. 
-. *LOGFILE*
-. log using robustness_log.smcl, replace
-{err}log file already open
-{txt}{search r(604), local:r(604);}
-
-end of do-file
-
-{search r(604), local:r(604);}
-
-{com}. do "/var/folders/3z/wxsh3hjn0_57l7qsmjtjjb5w0000gn/T//SD34517.000000"
-{txt}
-{com}. ********************************************************************************
-. ********** Table 1A: Baseline Summary Statistics (Excluding Outliers) ***********
-. ********************************************************************************
-. 
-. * DATA DIRECTORY
-. global datadir "/Users/felix/KTH/AppliedEconometrics/Project/DATA"
-{txt}
-{com}. 
-. *OUTPUT DIRECTORY
-. global outputdir "/Users/felix/KTH/AppliedEconometrics/Project/Replication"
-{txt}
-{com}. 
-. *LOGFILE*
-. log using robustness_log.smcl, replace
-{err}log file already open
-{txt}{search r(604), local:r(604);}
-
-end of do-file
-
-{search r(604), local:r(604);}
-
-{com}. do "/var/folders/3z/wxsh3hjn0_57l7qsmjtjjb5w0000gn/T//SD34517.000000"
-{txt}
-{com}. * Load baseline dataset
+. * Load baseline dataset
 . use "$datadir/2013-0533_data_baseline.dta", clear
 {txt}(Baseline data for "The miracle of microfinance?" (Banerjee et al.), AEJ 2014)
 
@@ -431,12 +98,7 @@ end of do-file
 {com}. 
 . * Export summary statistics to a text file
 . esttab using table1a_nooutliers.txt, replace cells("mean sd min max") label title("Excluding Outliers")
-{res}{txt}{p 0 4 2}
-(file {bf}
-table1a_nooutliers.txt{rm}
-not found)
-{p_end}
-(output written to {browse  `"table1a_nooutliers.txt"'})
+{res}{txt}(output written to {browse  `"table1a_nooutliers.txt"'})
 
 {com}. 
 . ********************************************************************************
@@ -534,12 +196,7 @@ anyloan_am~1 {c |}{res}      6,084    47476.87    58565.24          0     325000
 {com}. 
 . * Export summary statistics to a text file
 . esttab using table1b_nooutliers1.txt, replace cells("mean sd min max") label title("Excluding Outliers Endline 1")
-{res}{txt}{p 0 4 2}
-(file {bf}
-table1b_nooutliers1.txt{rm}
-not found)
-{p_end}
-(output written to {browse  `"table1b_nooutliers1.txt"'})
+{res}{txt}(output written to {browse  `"table1b_nooutliers1.txt"'})
 
 {com}. 
 . 
@@ -633,12 +290,7 @@ anyloan_am~2 {c |}{res}      5,598    71407.11    87207.09          0     500000
 {com}. 
 . * Export summary statistics to a text file
 . esttab using table1b_nooutliers2.txt, replace cells("mean sd min max") label title("Excluding Outliers Endline 2")
-{res}{txt}{p 0 4 2}
-(file {bf}
-table1b_nooutliers2.txt{rm}
-not found)
-{p_end}
-(output written to {browse  `"table1b_nooutliers2.txt"'})
+{res}{txt}(output written to {browse  `"table1b_nooutliers2.txt"'})
 
 {com}. 
 . 
@@ -694,7 +346,7 @@ Running regression without control: area_pop_base
 {txt}area_business_total_base {c |}{col 26}{res}{space 2} 100.5104{col 38}{space 2} 81.06556{col 49}{space 1}    1.24{col 58}{space 3}0.215{col 66}{space 4}-58.40426{col 79}{space 3} 259.4251
 {txt}{space 19}_cons {c |}{col 26}{res}{space 2} 1242.864{col 38}{space 2}  983.492{col 49}{space 1}    1.26{col 58}{space 3}0.206{col 66}{space 4}-685.0984{col 79}{space 3} 3170.826
 {txt}{hline 25}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}{browse `"/Users/felix/KTH/AppliedEconometrics/Project"' :dir}{com} : {txt}{stata `"seeout using "regression_robustness.txt""':seeout}
+{res}{browse `"/Users/felix/KTH/AppliedEconometrics/Project/Replication"' :dir}{com} : {txt}{stata `"seeout using "regression_robustness.txt""':seeout}
 
       Source {c |}       SS           df       MS      Number of obs   ={res}     6,116
 {txt}{hline 13}{c +}{hline 34}   F(3, 6112)      = {res}     0.98
@@ -711,7 +363,7 @@ Running regression without control: area_pop_base
 {txt}area_business_total_base {c |}{col 26}{res}{space 2} 29.04648{col 38}{space 2}  44.2771{col 49}{space 1}    0.66{col 58}{space 3}0.512{col 66}{space 4}-57.75223{col 79}{space 3} 115.8452
 {txt}{space 19}_cons {c |}{col 26}{res}{space 2} 5235.508{col 38}{space 2} 531.1304{col 49}{space 1}    9.86{col 58}{space 3}0.000{col 66}{space 4} 4194.305{col 79}{space 3} 6276.711
 {txt}{hline 25}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}{browse `"/Users/felix/KTH/AppliedEconometrics/Project"' :dir}{com} : {txt}{stata `"seeout using "regression_robustness.txt""':seeout}
+{res}{browse `"/Users/felix/KTH/AppliedEconometrics/Project/Replication"' :dir}{com} : {txt}{stata `"seeout using "regression_robustness.txt""':seeout}
 Running regression without control: area_debt_total_base
 
       Source {c |}       SS           df       MS      Number of obs   ={res}     6,608
@@ -729,7 +381,7 @@ Running regression without control: area_debt_total_base
 {txt}area_business_total_base {c |}{col 26}{res}{space 2} 112.5662{col 38}{space 2} 81.50586{col 49}{space 1}    1.38{col 58}{space 3}0.167{col 66}{space 4} -47.2116{col 79}{space 3} 272.3441
 {txt}{space 19}_cons {c |}{col 26}{res}{space 2} 4150.504{col 38}{space 2} 1234.122{col 49}{space 1}    3.36{col 58}{space 3}0.001{col 66}{space 4} 1731.225{col 79}{space 3} 6569.782
 {txt}{hline 25}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}{browse `"/Users/felix/KTH/AppliedEconometrics/Project"' :dir}{com} : {txt}{stata `"seeout using "regression_robustness.txt""':seeout}
+{res}{browse `"/Users/felix/KTH/AppliedEconometrics/Project/Replication"' :dir}{com} : {txt}{stata `"seeout using "regression_robustness.txt""':seeout}
 
       Source {c |}       SS           df       MS      Number of obs   ={res}     6,116
 {txt}{hline 13}{c +}{hline 34}   F(3, 6112)      = {res}     0.34
@@ -746,7 +398,7 @@ Running regression without control: area_debt_total_base
 {txt}area_business_total_base {c |}{col 26}{res}{space 2} 29.24223{col 38}{space 2} 44.46197{col 49}{space 1}    0.66{col 58}{space 3}0.511{col 66}{space 4}-57.91889{col 79}{space 3} 116.4034
 {txt}{space 19}_cons {c |}{col 26}{res}{space 2}  5720.11{col 38}{space 2} 669.7774{col 49}{space 1}    8.54{col 58}{space 3}0.000{col 66}{space 4}  4407.11{col 79}{space 3}  7033.11
 {txt}{hline 25}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}{browse `"/Users/felix/KTH/AppliedEconometrics/Project"' :dir}{com} : {txt}{stata `"seeout using "regression_robustness.txt""':seeout}
+{res}{browse `"/Users/felix/KTH/AppliedEconometrics/Project/Replication"' :dir}{com} : {txt}{stata `"seeout using "regression_robustness.txt""':seeout}
 Running regression without control: area_business_total_base
 
       Source {c |}       SS           df       MS      Number of obs   ={res}     6,608
@@ -764,7 +416,7 @@ Running regression without control: area_business_total_base
 {txt}area_debt_total_base {c |}{col 22}{res}{space 2} .0798403{col 34}{space 2} .0149162{col 45}{space 1}    5.35{col 54}{space 3}0.000{col 62}{space 4} .0505996{col 75}{space 3} .1090809
 {txt}{space 15}_cons {c |}{col 22}{res}{space 2} 1709.596{col 34}{space 2} 1204.775{col 45}{space 1}    1.42{col 54}{space 3}0.156{col 62}{space 4}-652.1532{col 75}{space 3} 4071.345
 {txt}{hline 21}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}{browse `"/Users/felix/KTH/AppliedEconometrics/Project"' :dir}{com} : {txt}{stata `"seeout using "regression_robustness.txt""':seeout}
+{res}{browse `"/Users/felix/KTH/AppliedEconometrics/Project/Replication"' :dir}{com} : {txt}{stata `"seeout using "regression_robustness.txt""':seeout}
 
       Source {c |}       SS           df       MS      Number of obs   ={res}     6,116
 {txt}{hline 13}{c +}{hline 34}   F(3, 6112)      = {res}     0.84
@@ -781,7 +433,7 @@ Running regression without control: area_business_total_base
 {txt}area_debt_total_base {c |}{col 22}{res}{space 2} .0106478{col 34}{space 2}  .007664{col 45}{space 1}    1.39{col 54}{space 3}0.165{col 62}{space 4}-.0043763{col 75}{space 3} .0256719
 {txt}{space 15}_cons {c |}{col 22}{res}{space 2} 5507.568{col 34}{space 2} 646.3329{col 45}{space 1}    8.52{col 54}{space 3}0.000{col 62}{space 4} 4240.528{col 75}{space 3} 6774.609
 {txt}{hline 21}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}{browse `"/Users/felix/KTH/AppliedEconometrics/Project"' :dir}{com} : {txt}{stata `"seeout using "regression_robustness.txt""':seeout}
+{res}{browse `"/Users/felix/KTH/AppliedEconometrics/Project/Replication"' :dir}{com} : {txt}{stata `"seeout using "regression_robustness.txt""':seeout}
 
 {com}. *** Treatment effect on business revenue ***
 . * Define baseline regression variables 
@@ -821,7 +473,7 @@ Running regression without control: area_pop_base
 {txt}area_business_total_base {c |}{col 26}{res}{space 2}-.0021775{col 38}{space 2} .0008135{col 49}{space 1}   -2.68{col 58}{space 3}0.007{col 66}{space 4}-.0037723{col 79}{space 3}-.0005828
 {txt}{space 19}_cons {c |}{col 26}{res}{space 2} .0223775{col 38}{space 2} .0098167{col 49}{space 1}    2.28{col 58}{space 3}0.023{col 66}{space 4} .0031337{col 79}{space 3} .0416213
 {txt}{hline 25}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}{browse `"/Users/felix/KTH/AppliedEconometrics/Project"' :dir}{com} : {txt}{stata `"seeout using "regression_robustness.txt""':seeout}
+{res}{browse `"/Users/felix/KTH/AppliedEconometrics/Project/Replication"' :dir}{com} : {txt}{stata `"seeout using "regression_robustness.txt""':seeout}
 
       Source {c |}       SS           df       MS      Number of obs   ={res}     6,142
 {txt}{hline 13}{c +}{hline 34}   F(3, 6138)      = {res}    28.13
@@ -838,7 +490,7 @@ Running regression without control: area_pop_base
 {txt}area_business_total_base {c |}{col 26}{res}{space 2}-.0024768{col 38}{space 2} .0009374{col 49}{space 1}   -2.64{col 58}{space 3}0.008{col 66}{space 4}-.0043145{col 79}{space 3}-.0006392
 {txt}{space 19}_cons {c |}{col 26}{res}{space 2} .1147292{col 38}{space 2} .0112433{col 49}{space 1}   10.20{col 58}{space 3}0.000{col 66}{space 4} .0926884{col 79}{space 3}   .13677
 {txt}{hline 25}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}{browse `"/Users/felix/KTH/AppliedEconometrics/Project"' :dir}{com} : {txt}{stata `"seeout using "regression_robustness.txt""':seeout}
+{res}{browse `"/Users/felix/KTH/AppliedEconometrics/Project/Replication"' :dir}{com} : {txt}{stata `"seeout using "regression_robustness.txt""':seeout}
 Running regression without control: area_debt_total_base
 
       Source {c |}       SS           df       MS      Number of obs   ={res}     6,811
@@ -856,7 +508,7 @@ Running regression without control: area_debt_total_base
 {txt}area_business_total_base {c |}{col 26}{res}{space 2}-.0020637{col 38}{space 2} .0008202{col 49}{space 1}   -2.52{col 58}{space 3}0.012{col 66}{space 4}-.0036715{col 79}{space 3} -.000456
 {txt}{space 19}_cons {c |}{col 26}{res}{space 2} .0737403{col 38}{space 2} .0123905{col 49}{space 1}    5.95{col 58}{space 3}0.000{col 66}{space 4}  .049451{col 79}{space 3} .0980297
 {txt}{hline 25}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}{browse `"/Users/felix/KTH/AppliedEconometrics/Project"' :dir}{com} : {txt}{stata `"seeout using "regression_robustness.txt""':seeout}
+{res}{browse `"/Users/felix/KTH/AppliedEconometrics/Project/Replication"' :dir}{com} : {txt}{stata `"seeout using "regression_robustness.txt""':seeout}
 
       Source {c |}       SS           df       MS      Number of obs   ={res}     6,142
 {txt}{hline 13}{c +}{hline 34}   F(3, 6138)      = {res}    26.94
@@ -873,7 +525,7 @@ Running regression without control: area_debt_total_base
 {txt}area_business_total_base {c |}{col 26}{res}{space 2} -.002584{col 38}{space 2} .0009415{col 49}{space 1}   -2.74{col 58}{space 3}0.006{col 66}{space 4}-.0044296{col 79}{space 3}-.0007384
 {txt}{space 19}_cons {c |}{col 26}{res}{space 2} .1475323{col 38}{space 2} .0141825{col 49}{space 1}   10.40{col 58}{space 3}0.000{col 66}{space 4} .1197296{col 79}{space 3}  .175335
 {txt}{hline 25}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}{browse `"/Users/felix/KTH/AppliedEconometrics/Project"' :dir}{com} : {txt}{stata `"seeout using "regression_robustness.txt""':seeout}
+{res}{browse `"/Users/felix/KTH/AppliedEconometrics/Project/Replication"' :dir}{com} : {txt}{stata `"seeout using "regression_robustness.txt""':seeout}
 Running regression without control: area_business_total_base
 
       Source {c |}       SS           df       MS      Number of obs   ={res}     6,811
@@ -891,7 +543,7 @@ Running regression without control: area_business_total_base
 {txt}area_debt_total_base {c |}{col 22}{res}{space 2} 1.21e-06{col 34}{space 2} 1.46e-07{col 45}{space 1}    8.25{col 54}{space 3}0.000{col 62}{space 4} 9.20e-07{col 75}{space 3} 1.49e-06
 {txt}{space 15}_cons {c |}{col 22}{res}{space 2} .0049407{col 34}{space 2} .0120512{col 45}{space 1}    0.41{col 54}{space 3}0.682{col 62}{space 4}-.0186835{col 75}{space 3} .0285649
 {txt}{hline 21}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}{browse `"/Users/felix/KTH/AppliedEconometrics/Project"' :dir}{com} : {txt}{stata `"seeout using "regression_robustness.txt""':seeout}
+{res}{browse `"/Users/felix/KTH/AppliedEconometrics/Project/Replication"' :dir}{com} : {txt}{stata `"seeout using "regression_robustness.txt""':seeout}
 
       Source {c |}       SS           df       MS      Number of obs   ={res}     6,142
 {txt}{hline 13}{c +}{hline 34}   F(3, 6138)      = {res}    26.28
@@ -908,7 +560,7 @@ Running regression without control: area_business_total_base
 {txt}area_debt_total_base {c |}{col 22}{res}{space 2} 3.84e-07{col 34}{space 2} 1.63e-07{col 45}{space 1}    2.36{col 54}{space 3}0.018{col 62}{space 4} 6.52e-08{col 75}{space 3} 7.02e-07
 {txt}{space 15}_cons {c |}{col 22}{res}{space 2} .1092788{col 34}{space 2} .0136892{col 45}{space 1}    7.98{col 54}{space 3}0.000{col 62}{space 4} .0824433{col 75}{space 3} .1361143
 {txt}{hline 21}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}{browse `"/Users/felix/KTH/AppliedEconometrics/Project"' :dir}{com} : {txt}{stata `"seeout using "regression_robustness.txt""':seeout}
+{res}{browse `"/Users/felix/KTH/AppliedEconometrics/Project/Replication"' :dir}{com} : {txt}{stata `"seeout using "regression_robustness.txt""':seeout}
 
 {com}. ********************************************************************************
 . ********** Regression Robustness: Add Additional Controls ***********************
@@ -960,7 +612,7 @@ Running regression without control: area_business_total_base
 {res}{txt}
 {com}. * Export results
 . outreg2 using regression_addcontrols.txt, append ctitle("With Additional Controls")
-{browse `"/Users/felix/KTH/AppliedEconometrics/Project"' :dir} : {txt}{stata `"seeout using "regression_addcontrols.txt""':seeout}
+{browse `"/Users/felix/KTH/AppliedEconometrics/Project/Replication"' :dir} : {txt}{stata `"seeout using "regression_addcontrols.txt""':seeout}
 
 {com}. regress bizrev_2 treatment `baseline_controls' `additional_controls'
 
@@ -993,7 +645,7 @@ Running regression without control: area_business_total_base
 {res}{txt}
 {com}. * Export results
 . outreg2 using regression_addcontrols.txt, append ctitle("With Additional Controls")
-{browse `"/Users/felix/KTH/AppliedEconometrics/Project"' :dir} : {txt}{stata `"seeout using "regression_addcontrols.txt""':seeout}
+{browse `"/Users/felix/KTH/AppliedEconometrics/Project/Replication"' :dir} : {txt}{stata `"seeout using "regression_addcontrols.txt""':seeout}
 
 {com}. 
 . * Baseline and additional control variables
@@ -1037,7 +689,7 @@ Running regression without control: area_business_total_base
 {res}{txt}
 {com}. * Export results
 . outreg2 using regression_addcontrols.txt, append ctitle("With Additional Controls")
-{browse `"/Users/felix/KTH/AppliedEconometrics/Project"' :dir} : {txt}{stata `"seeout using "regression_addcontrols.txt""':seeout}
+{browse `"/Users/felix/KTH/AppliedEconometrics/Project/Replication"' :dir} : {txt}{stata `"seeout using "regression_addcontrols.txt""':seeout}
 
 {com}. regress spandana_2 treatment `baseline_controls' `additional_controls'
 
@@ -1070,26 +722,23 @@ Running regression without control: area_business_total_base
 {res}{txt}
 {com}. * Export results
 . outreg2 using regression_addcontrols.txt, append ctitle("With Additional Controls")
-{browse `"/Users/felix/KTH/AppliedEconometrics/Project"' :dir} : {txt}{stata `"seeout using "regression_addcontrols.txt""':seeout}
+{browse `"/Users/felix/KTH/AppliedEconometrics/Project/Replication"' :dir} : {txt}{stata `"seeout using "regression_addcontrols.txt""':seeout}
 
 {com}. 
 {txt}end of do-file
 
-{com}. do "/Users/felix/KTH/AppliedEconometrics/Project/Robustness.do"
+{com}. do "/Users/felix/KTH/AppliedEconometrics/Project/sensitivity_analysis_figures.do"
 {txt}
-{com}. ********************************************************************************
-. ********** Table 1A: Baseline Summary Statistics (Excluding Outliers) ***********
-. ********************************************************************************
+{com}. 
+. /*******************************************************************************
+> Program Name:    sensitivity_analysis.do
+> Contact:         Felix (Created for further analysis)
+> Purpose:         Conducts sensitivity analysis on quantile treatment effect regressions
+>                  for "The miracle of microfinance?" replication project.
+> *******************************************************************************/
 . 
-. * DATA DIRECTORY
-. global datadir "/Users/felix/KTH/AppliedEconometrics/Project/DATA"
+. version 13.1
 {txt}
-{com}. 
-. *OUTPUT DIRECTORY
-. global outputdir "/Users/felix/KTH/AppliedEconometrics/Project/Replication"
-{txt}
-{com}. 
-. *LOGFILE*
-. capture log close
+{com}. cap log close
 {smcl}
 {com}{sf}{ul off}

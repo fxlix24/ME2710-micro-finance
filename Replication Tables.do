@@ -12,6 +12,7 @@ global datadir "/Users/felix/KTH/AppliedEconometrics/Project/DATA"
 global outputdir "/Users/felix/KTH/AppliedEconometrics/Project/Replication"
 
 *LOG FILE
+capture log close
 log using replication_logfile_tables.smcl, replace 
 
 *CONTROLS FOR BASELINE VARIABLES
@@ -64,77 +65,53 @@ summarize total_exp_mo nondurable_exp_mo durables_exp_mo home_durable_index if t
 ******************************************
 use "$datadir/2013-0533_data_endlines1and2.dta", clear
 
-local hh_composition "hhsize_1 hhsize_2 adults_1 adults_2 children_1 children_2 male_head_1 male_head_2 head_age_1 head_age_2 head_noeduc_1 head_noeduc_2"
-display "`hh_composition'"
-local credit_access "spandana_1 spandana_2 othermfi_1 othermfi_2 anybank_1 anybank_2 anyinformal_1 anyinformal_2 anyloan_1 anyloan_2"
-display "`credit_access'"
-local loan_amt "spandana_amt_1 spandana_amt_2 othermfi_amt_1 othermfi_amt_2 bank_amt_1 bank_amt_2 informal_amt_1 informal_amt_2 anyloan_amt_1 anyloan_amt_2"
-display "`loan_amt'"
-local self_emp_activ "total_biz_1 total_biz_2 female_biz_new_1 female_biz_new_2 female_biz_pct_1 female_biz_pct_2"
-display "`self_emp_activ'"
-local businesses "bizrev_1 bizrev_2 bizexpense_1 bizexpense_2 bizinvestment_1 bizinvestment_2 bizemployees_1 bizemployees_2 hours_week_biz_1 hours_week_biz_2"
-display "`businesses'"
-local businesses_allHH "bizrev_allHH_1 bizrev_allHH_2 bizexpense_allHH_1 bizexpense_allHH_2 bizinvestment_allHH_1 bizinvestment_allHH_2 bizemployees_allHH_1 bizemployees_allHH_2 hours_week_biz_allHH_1 hours_week_biz_allHH_2"
-display "`businesses_allHH'"
-local consumption "total_exp_mo_1 total_exp_mo_2 nondurable_exp_mo_1 nondurable_exp_mo_2 durables_exp_mo_1 durables_exp_mo_2 home_durable_index_1 home_durable_index_2"
-display "`consumption'"
+local hh_composition "hhsize adults children male_head head_age head_noeduc"
+local credit_access "spandana othermfi anybank anyinformal anyloan"
+local loan_amt "spandana_amt othermfi_amt bank_amt informal_amt anyloan_amt"
+local self_emp_activ "total_biz female_biz_allHH female_biz_pct"
+local businesses "bizrev bizexpense bizinvestment bizemployees hours_week_biz"
+local businesses_allHH "bizrev_allHH bizexpense_allHH bizinvestment_allHH bizemployees_allHH hours_week_biz_allHH"
+local consumption "total_exp_mo nondurable_exp_mo durables_exp_mo home_durable_index"
 
-* local allvars "`hh_composition' `credit_access' `loan_amt' `self_emp_activ' `businesses' `businesses_allHH' `consumption'"
-
-local allvars "`bizrev_allHH_' `bizexpense_allHH_' `bizinvestment_allHH_' `bizemployees_allHH_' `hours_week_biz_allHH_'"
-
-display "`allvars'"
+local allvars "`hh_composition' `credit_access' `loan_amt' `self_emp_activ' `businesses' `businesses_allHH' `consumption'"
 
 
-*1) Generate business variables for all households --> put variables to . (missing) for households without a business
+*1) Generate variables for business outcomes for all households (replacing each
+*	variable with missing for households without a business):
 forval i = 1/2 {
-		gen bizrev_allHH_`i'= bizrev_`i'
-		replace bizrev_`i'=. if total_biz_`i'==0
+	foreach var in `businesses' female_biz {
+			gen `var'_allHH_`i'=`var'_`i'
+			replace `var'_`i'=. if total_biz_`i'==0
 			}
-forval i = 1/2 {
-		gen bizexpense_allHH_`i'= bizexpense_`i'
-		replace bizexpense_`i'=. if total_biz_`i'==0
-			}
-			
-forval i = 1/2 {
-		gen bizinvestment_allHH_`i'= bizinvestment_`i'
-		replace bizinvestment_`i'=. if total_biz_`i'==0
-			}
+	}
 
-forval i = 1/2 {
-		gen bizemployees_allHH_`i'= bizemployees_`i'
-		replace bizemployees_`i'=. if total_biz_`i'==0
-			}
-			
-forval i = 1/2 {
-		gen hours_week_biz_allHH_`i'= hours_week_biz_`i'
-		replace hours_week_biz_`i'=. if total_biz_`i'==0
-			}
-			
 *2) Reshape to one observation per household per endline:
-
-*Rename*
+foreach var in `allvars' {
+	rename `var'_1 `var'1
+	rename `var'_2 `var'2
+	}
 
 reshape long `allvars', i(hhid) j(endline)
 keep hhid areaid endline treatment `allvars'
 tab endline, gen(endline)
 
-*3) Create summary statistics table:
-
-forval i = 1/2 {
-		summarize hh_size_`i' adult_`i' children_`i' male_head_`i' head_age_`i' head_noeduc_`i' if treatment == 1
-			}
-
-
 * Summary statistics for treatment group (treatment == 1)
 
-summarize hh_size_`i' adult_`i' children_`i' male_head_`i' head_age_`i' head_noeduc_`i' if treatment == 1
-summarize spandana othermfi bank informal anyloan if treatment == 1
-summarize spandana_amt othermfi_amt bank_amt informal_amt anyloan_amt if treatment == 1
-summarize total_biz female_biz female_biz_pct if treatment == 1
-summarize bizrev bizexpense bizinvestment bizemployees hours_weekbiz if treatment == 1
-summarize hh_size adult children male_head head_age head_noeduc if treatment == 1
-summarize total_exp_mo nondurable_exp_mo durables_exp_mo home_durable_index if treatment == 1
+summarize hhsize adults children male_head head_age head_noeduc if treatment == 1 & endline ==1
+summarize spandana othermfi anybank anyinformal anyloan if treatment == 1 & endline ==1
+summarize spandana_amt othermfi_amt bank_amt informal_amt anyloan_amt if treatment == 1 & endline ==1
+summarize total_biz female_biz_allHH female_biz_pct if treatment == 1 & endline ==1
+summarize bizrev bizexpense bizinvestment bizemployees hours_week_biz if treatment == 1 & endline ==1
+summarize bizrev_allHH bizexpense_allHH bizinvestment_allHH bizemployees_allHH hours_week_biz_allHH if treatment == 1 & endline ==1
+summarize total_exp_mo nondurable_exp_mo durables_exp_mo home_durable_index if treatment == 1 & endline ==1
+
+summarize hhsize adults children male_head head_age head_noeduc if treatment == 1 & endline ==2
+summarize spandana othermfi anybank anyinformal anyloan if treatment == 1 & endline ==2
+summarize spandana_amt othermfi_amt bank_amt informal_amt anyloan_amt if treatment == 1 & endline ==2
+summarize total_biz female_biz_allHH female_biz_pct if treatment == 1 & endline ==2
+summarize bizrev bizexpense bizinvestment bizemployees hours_week_biz if treatment == 1 & endline ==2
+summarize bizrev_allHH bizexpense_allHH bizinvestment_allHH bizemployees_allHH hours_week_biz_allHH if treatment == 1 & endline ==2
+summarize total_exp_mo nondurable_exp_mo durables_exp_mo home_durable_index if treatment == 1 & endline ==2
 
 
 
@@ -162,7 +139,7 @@ foreach var in spandana_1 othermfi_1 anymfi_1 anybank_1	anyinformal_1  anyloan_1
     est store `var'
 }
 * Export all stored results to a table
-estout * using "table2r.txt", ///
+estout * using "table2r.txt", replace ///
     drop($area_controls _cons) ///   * Drop area controls and the constant from the table
     title("Table 2: Credit, Endline 1")
     cells(b(fmt(2)) se(fmt(2))) ///  * Include coefficients and standard errors, formatted with 2 decimal places
@@ -296,5 +273,3 @@ estout * using "table5.txt", drop($area_controls _cons) ///
     prehead("" @title) cells(b(fmt(a3) s) se(fmt(a3) par("="("[" "]")))) ///
     append s(r2 mn2 sd2 N pval) starlevels(* .1 ** .05 *** .01) legend ///
     postfoot("Robust standard errors, clustered at the area level, in brackets.")
-
-

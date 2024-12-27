@@ -9,7 +9,8 @@ global datadir "/Users/felix/KTH/AppliedEconometrics/Project/DATA"
 global outputdir "/Users/felix/KTH/AppliedEconometrics/Project/Replication"
 
 *LOGFILE*
-log using robustness_log.smcl, replace
+capture log close
+log using robustness_log, replace
 cd "$outputdir"
 
 * Load baseline dataset
