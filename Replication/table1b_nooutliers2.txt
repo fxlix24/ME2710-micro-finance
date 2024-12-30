@@ -4,22 +4,21 @@ Excluding Outliers Endline 2
                                                                         
                              mean           sd          min          max
 ------------------------------------------------------------------------
-Household size, en~2      6.07717     2.194519            2           15
-Adults (16 and old~o     3.949804     1.660635            2            9
-Children (15 and y~u     1.693283     1.200647            0            5
-Male head of house~      .8206502     .3836792            0            1
-Age of head of hou~n     41.95355     9.592277           24           69
-Head of household ~t     .2813505     .4496982            0            1
-Has outstanding lo~a     .1473741     .3545101            0            1
-Has outstanding lo~p     .2491961     .4325862            0            1
-Has outstanding lo~      .0632369     .2434103            0            1
-Has outstanding in~e     .5993212     .4900798            0            1
-Has any outstandin~n     .9040729     .2945176            0            1
-Total outstan..), ~2      1928.99     5009.235            0     24989.37
-Total outstan..), ~2     3952.019     7958.789            0        44000
-Total outstan..), ~2     2591.845     12613.47            0     149936.2
-Total outstan..), ~2     25351.84     48517.27            0     358180.9
-Total outstan..), ~2     71407.11     87207.09            0       500000
+Has outstanding lo~a      .141396     .3484609            0            1
+Has outstanding lo~p     .2443926     .4297651            0            1
+Has outstanding lo~       .060829     .2390378            0            1
+Has outstanding in~e     .5959088     .4907593            0            1
+Has any outstandin~n     .8989772     .3013859            0            1
+Total outstan..), ~2     1836.425     4897.188            0     24989.37
+Total outstan..), ~2     3881.374     7955.088            0        46000
+Total outstan..), ~2     2506.565     12466.01            0     149936.2
+Total outstan..), ~2     24476.68     47922.92            0     368593.2
+Total outstan..), ~2     68307.64     84900.11            0       500000
+Business reve..), ~2      3713.43     9112.045            0      82964.7
+Business expe..), ~2     2373.706     6718.959            0     54143.63
+Business inve..), ~2     252.1113     1439.469            0     21824.05
+Employees in all b~d     .0687242     .3943878            0            4
+Total hrs/week wor~m     31.64974     50.60248            0          223
 ------------------------------------------------------------------------
-Observations                 5598                                       
+Observations                 5573                                       
 ------------------------------------------------------------------------

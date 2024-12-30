@@ -95,23 +95,23 @@ reshape long `allvars', i(hhid) j(endline)
 keep hhid areaid endline treatment `allvars'
 tab endline, gen(endline)
 
-* Summary statistics for treatment group (treatment == 1)
+* Summary statistics for control group at EL1 and EL2
 
-summarize hhsize adults children male_head head_age head_noeduc if treatment == 1 & endline ==1
-summarize spandana othermfi anybank anyinformal anyloan if treatment == 1 & endline ==1
-summarize spandana_amt othermfi_amt bank_amt informal_amt anyloan_amt if treatment == 1 & endline ==1
-summarize total_biz female_biz_allHH female_biz_pct if treatment == 1 & endline ==1
-summarize bizrev bizexpense bizinvestment bizemployees hours_week_biz if treatment == 1 & endline ==1
-summarize bizrev_allHH bizexpense_allHH bizinvestment_allHH bizemployees_allHH hours_week_biz_allHH if treatment == 1 & endline ==1
-summarize total_exp_mo nondurable_exp_mo durables_exp_mo home_durable_index if treatment == 1 & endline ==1
+summarize hhsize adults children male_head head_age head_noeduc if treatment == 0 & endline ==1
+summarize spandana othermfi anybank anyinformal anyloan if treatment == 0 & endline ==1
+summarize spandana_amt othermfi_amt bank_amt informal_amt anyloan_amt if treatment == 0 & endline ==1
+summarize total_biz female_biz_allHH female_biz_pct if treatment == 0 & endline ==1
+summarize bizrev bizexpense bizinvestment bizemployees hours_week_biz if treatment == 0 & endline ==1
+summarize bizrev_allHH bizexpense_allHH bizinvestment_allHH bizemployees_allHH hours_week_biz_allHH if treatment == 0 & endline ==1
+summarize total_exp_mo nondurable_exp_mo durables_exp_mo home_durable_index if treatment == 0 & endline ==1
 
-summarize hhsize adults children male_head head_age head_noeduc if treatment == 1 & endline ==2
-summarize spandana othermfi anybank anyinformal anyloan if treatment == 1 & endline ==2
-summarize spandana_amt othermfi_amt bank_amt informal_amt anyloan_amt if treatment == 1 & endline ==2
-summarize total_biz female_biz_allHH female_biz_pct if treatment == 1 & endline ==2
-summarize bizrev bizexpense bizinvestment bizemployees hours_week_biz if treatment == 1 & endline ==2
-summarize bizrev_allHH bizexpense_allHH bizinvestment_allHH bizemployees_allHH hours_week_biz_allHH if treatment == 1 & endline ==2
-summarize total_exp_mo nondurable_exp_mo durables_exp_mo home_durable_index if treatment == 1 & endline ==2
+summarize hhsize adults children male_head head_age head_noeduc if treatment == 0 & endline ==2
+summarize spandana othermfi anybank anyinformal anyloan if treatment == 0 & endline ==2
+summarize spandana_amt othermfi_amt bank_amt informal_amt anyloan_amt if treatment == 0 & endline ==2
+summarize total_biz female_biz_allHH female_biz_pct if treatment == 0 & endline ==2
+summarize bizrev bizexpense bizinvestment bizemployees hours_week_biz if treatment == 0 & endline ==2
+summarize bizrev_allHH bizexpense_allHH bizinvestment_allHH bizemployees_allHH hours_week_biz_allHH if treatment == 0 & endline ==2
+summarize total_exp_mo nondurable_exp_mo durables_exp_mo home_durable_index if treatment == 0 & endline ==2
 
 
 
@@ -139,16 +139,7 @@ foreach var in spandana_1 othermfi_1 anymfi_1 anybank_1	anyinformal_1  anyloan_1
     est store `var'
 }
 * Export all stored results to a table
-estout * using "table2r.txt", replace ///
-    drop($area_controls _cons) ///   * Drop area controls and the constant from the table
-    title("Table 2: Credit, Endline 1")
-    cells(b(fmt(2)) se(fmt(2))) ///  * Include coefficients and standard errors, formatted with 2 decimal places
-    s(r2 mean_control sd_control N pval) ///  * Add additional statistics (R2, mean, SD, observations, p-value)
-    starlevels(* .1 ** .05 *** .01)
-    legend   
-    postfoot("Robust standard errors, clustered at the area level, in brackets.") 
-    replace  
-	
+
 	
 ***PANEL B: ENDLINE 2***
 est clear
@@ -170,15 +161,7 @@ foreach var in spandana_2 othermfi_2 anymfi_2 anybank_2 anyinformal_2 anyloan_2 
     est store `var'
 }
 *Export all stored results to a table
-estout * using "table2r.txt", ///
-    drop($area_controls _cons) ///  * Drop area controls and the constant from the table
-    title("Table 2: Credit, Endline 2") 
-    cells(b(fmt(2)) se(fmt(2))) ///  * Include coefficients and standard errors, formatted with 2 decimal places
-    s(r2 mean_control sd_control N pval) ///  * Add additional statistics (R2, mean, SD, observations, p-value)
-    starlevels(* .1 ** .05 *** .01) 
-    legend 
-    postfoot("Robust standard errors, clustered at the area level, in brackets.")
-    append 
+
 
 ***SENSITIVITY ANALYSIS***
 
@@ -246,7 +229,7 @@ foreach var in hours_week_1 hours_week_biz_1 hours_week_outside_1 ///
    est store `var'
 }
 
-estout * using "table5r.txt", drop($area_controls _cons) ///
+estout * using "table5r.tex", drop($area_controls _cons) ///
     title("Table 5: Time worked by household members, Endline 1") ///
     prehead("" @title) cells(b(fmt(a3) s) se(fmt(a3) par("="("[" "]")))) ///
     replace s(r2 mn1 sd1 N pval) starlevels(* .1 ** .05 *** .01) legend ///
@@ -268,8 +251,10 @@ foreach var in hours_week_2 hours_week_biz_2 hours_week_outside_2 ///
 }
 
 // Append the results for Endline 2 to the same table
-estout * using "table5.txt", drop($area_controls _cons) ///
+estout * using "table5r.tex", drop($area_controls _cons) ///
     title("Table 5: Time worked by household members, Endline 2") ///
     prehead("" @title) cells(b(fmt(a3) s) se(fmt(a3) par("="("[" "]")))) ///
     append s(r2 mn2 sd2 N pval) starlevels(* .1 ** .05 *** .01) legend ///
     postfoot("Robust standard errors, clustered at the area level, in brackets.")
+
+

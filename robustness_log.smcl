@@ -1,9 +1,9 @@
 {smcl}
-{txt}{sf}{ul off}{.-}
+{com}{sf}{ul off}{txt}{.-}
       name:  {res}<unnamed>
        {txt}log:  {res}/Users/felix/KTH/AppliedEconometrics/Project/robustness_log.smcl
   {txt}log type:  {res}smcl
- {txt}opened on:  {res}27 Dec 2024, 09:38:11
+ {txt}opened on:  {res}30 Dec 2024, 17:58:04
 {txt}
 {com}. cd "$outputdir"
 {res}/Users/felix/KTH/AppliedEconometrics/Project/Replication
@@ -206,86 +206,82 @@ anyloan_am~1 {c |}{res}      6,084    47476.87    58565.24          0     325000
 
 {com}. 
 . * Define key variables for summary statistics
-. local hh_composition_2 "hhsize_2 adults_2 children_2 male_head_2 head_age_2 head_noeduc_2"
-{txt}
-{com}. local credit_access_2 "spandana_2 othermfi_2 anybank_2 anyinformal_2 anyloan_2"
+. local credit_access_2 "spandana_2 othermfi_2 anybank_2 anyinformal_2 anyloan_2"
 {txt}
 {com}. local loan_amt_2 "spandana_amt_2 othermfi_amt_2 bank_amt_2 informal_amt_2 anyloan_amt_2"
+{txt}
+{com}. local businesses_2 "bizrev_2 bizexpense_2 bizinvestment_2 bizemployees_2 hours_week_biz_2"
 {txt}
 {com}. 
 . * Exclude outliers (1st and 99th percentiles for numeric variables)
 . 
-. foreach var of varlist `hh_composition_2' `credit_access_2' `loan_amt_2' {c -(}
+. foreach var of varlist `hh_composition_2' `credit_access_2' `loan_amt_2' `businesses_2' {c -(}
 {txt}  2{com}.     quietly summarize `var', detail
 {txt}  3{com}.     local p1 = r(p1)
 {txt}  4{com}.     local p99 = r(p99)
 {txt}  5{com}.     drop if `var' < `p1' | `var' > `p99'
 {txt}  6{com}. {c )-}
-{txt}(779 observations deleted)
-(85 observations deleted)
-(37 observations deleted)
-(11 observations deleted)
-(96 observations deleted)
-(1 observation deleted)
-(0 observations deleted)
+{txt}(721 observations deleted)
 (0 observations deleted)
 (0 observations deleted)
 (0 observations deleted)
 (0 observations deleted)
 (32 observations deleted)
-(55 observations deleted)
-(58 observations deleted)
+(60 observations deleted)
+(61 observations deleted)
+(60 observations deleted)
 (57 observations deleted)
-(54 observations deleted)
+(79 observations deleted)
+(70 observations deleted)
+(57 observations deleted)
+(37 observations deleted)
+(56 observations deleted)
 
 {com}. 
 . * Recalculate summary statistics
-. summarize `hh_composition_2' `credit_access_2' `loan_amt_2'
+. summarize `credit_access_2' `loan_amt_2' `businesses_2'
 
 {txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
 {hline 13}{c +}{hline 57}
-{space 4}hhsize_2 {c |}{res}      5,598     6.07717    2.194519          2         15
-{txt}{space 4}adults_2 {c |}{res}      5,598    3.949804    1.660635          2          9
-{txt}{space 2}children_2 {c |}{res}      5,598    1.693283    1.200647          0          5
-{txt}{space 1}male_head_2 {c |}{res}      5,598    .8206502    .3836792          0          1
-{txt}{space 2}head_age_2 {c |}{res}      5,598    41.95355    9.592277         24         69
+{space 2}spandana_2 {c |}{res}      5,573     .141396    .3484609          0          1
+{txt}{space 2}othermfi_2 {c |}{res}      5,573    .2443926    .4297651          0          1
+{txt}{space 3}anybank_2 {c |}{res}      5,573     .060829    .2390378          0          1
+{txt}anyinforma~2 {c |}{res}      5,573    .5959088    .4907593          0          1
+{txt}{space 3}anyloan_2 {c |}{res}      5,573    .8989772    .3013859          0          1
 {txt}{hline 13}{c +}{hline 57}
-head_noedu~2 {c |}{res}      5,598    .2813505    .4496982          0          1
-{txt}{space 2}spandana_2 {c |}{res}      5,598    .1473741    .3545101          0          1
-{txt}{space 2}othermfi_2 {c |}{res}      5,598    .2491961    .4325862          0          1
-{txt}{space 3}anybank_2 {c |}{res}      5,598    .0632369    .2434103          0          1
-{txt}anyinforma~2 {c |}{res}      5,598    .5993212    .4900798          0          1
+spandana_a~2 {c |}{res}      5,573    1836.425    4897.188          0   24989.37
+{txt}othermfi_a~2 {c |}{res}      5,573    3881.374    7955.088          0      46000
+{txt}{space 2}bank_amt_2 {c |}{res}      5,573    2506.565    12466.01          0   149936.2
+{txt}informal_a~2 {c |}{res}      5,573    24476.68    47922.92          0   368593.2
+{txt}anyloan_am~2 {c |}{res}      5,573    68307.64    84900.11          0     500000
 {txt}{hline 13}{c +}{hline 57}
-{space 3}anyloan_2 {c |}{res}      5,598    .9040729    .2945176          0          1
-{txt}spandana_a~2 {c |}{res}      5,598     1928.99    5009.235          0   24989.37
-{txt}othermfi_a~2 {c |}{res}      5,598    3952.019    7958.789          0      44000
-{txt}{space 2}bank_amt_2 {c |}{res}      5,598    2591.845    12613.47          0   149936.2
-{txt}informal_a~2 {c |}{res}      5,598    25351.84    48517.27          0   358180.9
-{txt}{hline 13}{c +}{hline 57}
-anyloan_am~2 {c |}{res}      5,598    71407.11    87207.09          0     500000
+{space 4}bizrev_2 {c |}{res}      5,573     3713.43    9112.045          0    82964.7
+{txt}bizexpense_2 {c |}{res}      5,573    2373.706    6718.959          0   54143.63
+{txt}bizinvestm~2 {c |}{res}      5,573    252.1113    1439.469          0   21824.05
+{txt}bizemploye~2 {c |}{res}      5,573    .0687242    .3943878          0          4
+{txt}hours_we~z_2 {c |}{res}      5,573    31.64974    50.60248          0        223
 {txt}
 {com}. 
 . * Store summary statistics
-. estpost summarize `hh_composition_2' `credit_access_2' `loan_amt_2'
+. estpost summarize `credit_access_2' `loan_amt_2' `businesses_2'
 
 {txt}{space 0}{space 0}{ralign 12:}{space 1}{c |}{space 1}{ralign 9:e(count)}{space 1}{space 1}{ralign 9:e(sum_w)}{space 1}{space 1}{ralign 9:e(mean)}{space 1}{space 1}{ralign 9:e(Var)}{space 1}{space 1}{ralign 9:e(sd)}{space 1}{space 1}{ralign 9:e(min)}{space 1}{space 1}{ralign 9:e(max)}{space 1}{space 1}{ralign 9:e(sum)}{space 1}
 {space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}{hline 11}{hline 11}{hline 11}{hline 11}{hline 11}
-{space 0}{space 0}{ralign 12:hhsize_2}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     5598}}}{space 1}{space 1}{ralign 9:{res:{sf:     5598}}}{space 1}{space 1}{ralign 9:{res:{sf:  6.07717}}}{space 1}{space 1}{ralign 9:{res:{sf: 4.815913}}}{space 1}{space 1}{ralign 9:{res:{sf: 2.194519}}}{space 1}{space 1}{ralign 9:{res:{sf:        2}}}{space 1}{space 1}{ralign 9:{res:{sf:       15}}}{space 1}{space 1}{ralign 9:{res:{sf:    34020}}}{space 1}
-{space 0}{space 0}{ralign 12:adults_2}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     5598}}}{space 1}{space 1}{ralign 9:{res:{sf:     5598}}}{space 1}{space 1}{ralign 9:{res:{sf: 3.949804}}}{space 1}{space 1}{ralign 9:{res:{sf: 2.757709}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.660635}}}{space 1}{space 1}{ralign 9:{res:{sf:        2}}}{space 1}{space 1}{ralign 9:{res:{sf:        9}}}{space 1}{space 1}{ralign 9:{res:{sf:    22111}}}{space 1}
-{space 0}{space 0}{ralign 12:children_2}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     5598}}}{space 1}{space 1}{ralign 9:{res:{sf:     5598}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.693283}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.441552}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.200647}}}{space 1}{space 1}{ralign 9:{res:{sf:        0}}}{space 1}{space 1}{ralign 9:{res:{sf:        5}}}{space 1}{space 1}{ralign 9:{res:{sf:     9479}}}{space 1}
-{space 0}{space 0}{ralign 12:male_head_2}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     5598}}}{space 1}{space 1}{ralign 9:{res:{sf:     5598}}}{space 1}{space 1}{ralign 9:{res:{sf: .8206502}}}{space 1}{space 1}{ralign 9:{res:{sf: .1472097}}}{space 1}{space 1}{ralign 9:{res:{sf: .3836792}}}{space 1}{space 1}{ralign 9:{res:{sf:        0}}}{space 1}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf:     4594}}}{space 1}
-{space 0}{space 0}{ralign 12:head_age_2}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     5598}}}{space 1}{space 1}{ralign 9:{res:{sf:     5598}}}{space 1}{space 1}{ralign 9:{res:{sf: 41.95355}}}{space 1}{space 1}{ralign 9:{res:{sf: 92.01178}}}{space 1}{space 1}{ralign 9:{res:{sf: 9.592277}}}{space 1}{space 1}{ralign 9:{res:{sf:       24}}}{space 1}{space 1}{ralign 9:{res:{sf:       69}}}{space 1}{space 1}{ralign 9:{res:{sf:   234856}}}{space 1}
-{space 0}{space 0}{ralign 12:head_noedu~2}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     5598}}}{space 1}{space 1}{ralign 9:{res:{sf:     5598}}}{space 1}{space 1}{ralign 9:{res:{sf: .2813505}}}{space 1}{space 1}{ralign 9:{res:{sf: .2022285}}}{space 1}{space 1}{ralign 9:{res:{sf: .4496982}}}{space 1}{space 1}{ralign 9:{res:{sf:        0}}}{space 1}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf:     1575}}}{space 1}
-{space 0}{space 0}{ralign 12:spandana_2}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     5598}}}{space 1}{space 1}{ralign 9:{res:{sf:     5598}}}{space 1}{space 1}{ralign 9:{res:{sf: .1473741}}}{space 1}{space 1}{ralign 9:{res:{sf: .1256774}}}{space 1}{space 1}{ralign 9:{res:{sf: .3545101}}}{space 1}{space 1}{ralign 9:{res:{sf:        0}}}{space 1}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf:      825}}}{space 1}
-{space 0}{space 0}{ralign 12:othermfi_2}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     5598}}}{space 1}{space 1}{ralign 9:{res:{sf:     5598}}}{space 1}{space 1}{ralign 9:{res:{sf: .2491961}}}{space 1}{space 1}{ralign 9:{res:{sf: .1871309}}}{space 1}{space 1}{ralign 9:{res:{sf: .4325862}}}{space 1}{space 1}{ralign 9:{res:{sf:        0}}}{space 1}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf:     1395}}}{space 1}
-{space 0}{space 0}{ralign 12:anybank_2}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     5598}}}{space 1}{space 1}{ralign 9:{res:{sf:     5598}}}{space 1}{space 1}{ralign 9:{res:{sf: .0632369}}}{space 1}{space 1}{ralign 9:{res:{sf: .0592486}}}{space 1}{space 1}{ralign 9:{res:{sf: .2434103}}}{space 1}{space 1}{ralign 9:{res:{sf:        0}}}{space 1}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf:      354}}}{space 1}
-{space 0}{space 0}{ralign 12:anyinforma~2}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     5598}}}{space 1}{space 1}{ralign 9:{res:{sf:     5598}}}{space 1}{space 1}{ralign 9:{res:{sf: .5993212}}}{space 1}{space 1}{ralign 9:{res:{sf: .2401782}}}{space 1}{space 1}{ralign 9:{res:{sf: .4900798}}}{space 1}{space 1}{ralign 9:{res:{sf:        0}}}{space 1}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf:     3355}}}{space 1}
-{space 0}{space 0}{ralign 12:anyloan_2}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     5598}}}{space 1}{space 1}{ralign 9:{res:{sf:     5598}}}{space 1}{space 1}{ralign 9:{res:{sf: .9040729}}}{space 1}{space 1}{ralign 9:{res:{sf: .0867406}}}{space 1}{space 1}{ralign 9:{res:{sf: .2945176}}}{space 1}{space 1}{ralign 9:{res:{sf:        0}}}{space 1}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf:     5061}}}{space 1}
-{space 0}{space 0}{ralign 12:spandana_a~2}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     5598}}}{space 1}{space 1}{ralign 9:{res:{sf:     5598}}}{space 1}{space 1}{ralign 9:{res:{sf:  1928.99}}}{space 1}{space 1}{ralign 9:{res:{sf: 2.51e+07}}}{space 1}{space 1}{ralign 9:{res:{sf: 5009.235}}}{space 1}{space 1}{ralign 9:{res:{sf:        0}}}{space 1}{space 1}{ralign 9:{res:{sf: 24989.37}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.08e+07}}}{space 1}
-{space 0}{space 0}{ralign 12:othermfi_a~2}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     5598}}}{space 1}{space 1}{ralign 9:{res:{sf:     5598}}}{space 1}{space 1}{ralign 9:{res:{sf: 3952.019}}}{space 1}{space 1}{ralign 9:{res:{sf: 6.33e+07}}}{space 1}{space 1}{ralign 9:{res:{sf: 7958.789}}}{space 1}{space 1}{ralign 9:{res:{sf:        0}}}{space 1}{space 1}{ralign 9:{res:{sf:    44000}}}{space 1}{space 1}{ralign 9:{res:{sf: 2.21e+07}}}{space 1}
-{space 0}{space 0}{ralign 12:bank_amt_2}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     5598}}}{space 1}{space 1}{ralign 9:{res:{sf:     5598}}}{space 1}{space 1}{ralign 9:{res:{sf: 2591.845}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.59e+08}}}{space 1}{space 1}{ralign 9:{res:{sf: 12613.47}}}{space 1}{space 1}{ralign 9:{res:{sf:        0}}}{space 1}{space 1}{ralign 9:{res:{sf: 149936.2}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.45e+07}}}{space 1}
-{space 0}{space 0}{ralign 12:informal_a~2}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     5598}}}{space 1}{space 1}{ralign 9:{res:{sf:     5598}}}{space 1}{space 1}{ralign 9:{res:{sf: 25351.84}}}{space 1}{space 1}{ralign 9:{res:{sf: 2.35e+09}}}{space 1}{space 1}{ralign 9:{res:{sf: 48517.27}}}{space 1}{space 1}{ralign 9:{res:{sf:        0}}}{space 1}{space 1}{ralign 9:{res:{sf: 358180.9}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.42e+08}}}{space 1}
-{space 0}{space 0}{ralign 12:anyloan_am~2}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     5598}}}{space 1}{space 1}{ralign 9:{res:{sf:     5598}}}{space 1}{space 1}{ralign 9:{res:{sf: 71407.11}}}{space 1}{space 1}{ralign 9:{res:{sf: 7.61e+09}}}{space 1}{space 1}{ralign 9:{res:{sf: 87207.09}}}{space 1}{space 1}{ralign 9:{res:{sf:        0}}}{space 1}{space 1}{ralign 9:{res:{sf:   500000}}}{space 1}{space 1}{ralign 9:{res:{sf: 4.00e+08}}}{space 1}
+{space 0}{space 0}{ralign 12:spandana_2}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     5573}}}{space 1}{space 1}{ralign 9:{res:{sf:     5573}}}{space 1}{space 1}{ralign 9:{res:{sf:  .141396}}}{space 1}{space 1}{ralign 9:{res:{sf:  .121425}}}{space 1}{space 1}{ralign 9:{res:{sf: .3484609}}}{space 1}{space 1}{ralign 9:{res:{sf:        0}}}{space 1}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf:      788}}}{space 1}
+{space 0}{space 0}{ralign 12:othermfi_2}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     5573}}}{space 1}{space 1}{ralign 9:{res:{sf:     5573}}}{space 1}{space 1}{ralign 9:{res:{sf: .2443926}}}{space 1}{space 1}{ralign 9:{res:{sf:  .184698}}}{space 1}{space 1}{ralign 9:{res:{sf: .4297651}}}{space 1}{space 1}{ralign 9:{res:{sf:        0}}}{space 1}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf:     1362}}}{space 1}
+{space 0}{space 0}{ralign 12:anybank_2}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     5573}}}{space 1}{space 1}{ralign 9:{res:{sf:     5573}}}{space 1}{space 1}{ralign 9:{res:{sf:  .060829}}}{space 1}{space 1}{ralign 9:{res:{sf: .0571391}}}{space 1}{space 1}{ralign 9:{res:{sf: .2390378}}}{space 1}{space 1}{ralign 9:{res:{sf:        0}}}{space 1}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf:      339}}}{space 1}
+{space 0}{space 0}{ralign 12:anyinforma~2}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     5573}}}{space 1}{space 1}{ralign 9:{res:{sf:     5573}}}{space 1}{space 1}{ralign 9:{res:{sf: .5959088}}}{space 1}{space 1}{ralign 9:{res:{sf: .2408447}}}{space 1}{space 1}{ralign 9:{res:{sf: .4907593}}}{space 1}{space 1}{ralign 9:{res:{sf:        0}}}{space 1}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf:     3321}}}{space 1}
+{space 0}{space 0}{ralign 12:anyloan_2}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     5573}}}{space 1}{space 1}{ralign 9:{res:{sf:     5573}}}{space 1}{space 1}{ralign 9:{res:{sf: .8989772}}}{space 1}{space 1}{ralign 9:{res:{sf: .0908335}}}{space 1}{space 1}{ralign 9:{res:{sf: .3013859}}}{space 1}{space 1}{ralign 9:{res:{sf:        0}}}{space 1}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf:     5010}}}{space 1}
+{space 0}{space 0}{ralign 12:spandana_a~2}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     5573}}}{space 1}{space 1}{ralign 9:{res:{sf:     5573}}}{space 1}{space 1}{ralign 9:{res:{sf: 1836.425}}}{space 1}{space 1}{ralign 9:{res:{sf: 2.40e+07}}}{space 1}{space 1}{ralign 9:{res:{sf: 4897.188}}}{space 1}{space 1}{ralign 9:{res:{sf:        0}}}{space 1}{space 1}{ralign 9:{res:{sf: 24989.37}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.02e+07}}}{space 1}
+{space 0}{space 0}{ralign 12:othermfi_a~2}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     5573}}}{space 1}{space 1}{ralign 9:{res:{sf:     5573}}}{space 1}{space 1}{ralign 9:{res:{sf: 3881.374}}}{space 1}{space 1}{ralign 9:{res:{sf: 6.33e+07}}}{space 1}{space 1}{ralign 9:{res:{sf: 7955.088}}}{space 1}{space 1}{ralign 9:{res:{sf:        0}}}{space 1}{space 1}{ralign 9:{res:{sf:    46000}}}{space 1}{space 1}{ralign 9:{res:{sf: 2.16e+07}}}{space 1}
+{space 0}{space 0}{ralign 12:bank_amt_2}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     5573}}}{space 1}{space 1}{ralign 9:{res:{sf:     5573}}}{space 1}{space 1}{ralign 9:{res:{sf: 2506.565}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.55e+08}}}{space 1}{space 1}{ralign 9:{res:{sf: 12466.01}}}{space 1}{space 1}{ralign 9:{res:{sf:        0}}}{space 1}{space 1}{ralign 9:{res:{sf: 149936.2}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.40e+07}}}{space 1}
+{space 0}{space 0}{ralign 12:informal_a~2}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     5573}}}{space 1}{space 1}{ralign 9:{res:{sf:     5573}}}{space 1}{space 1}{ralign 9:{res:{sf: 24476.68}}}{space 1}{space 1}{ralign 9:{res:{sf: 2.30e+09}}}{space 1}{space 1}{ralign 9:{res:{sf: 47922.92}}}{space 1}{space 1}{ralign 9:{res:{sf:        0}}}{space 1}{space 1}{ralign 9:{res:{sf: 368593.2}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.36e+08}}}{space 1}
+{space 0}{space 0}{ralign 12:anyloan_am~2}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     5573}}}{space 1}{space 1}{ralign 9:{res:{sf:     5573}}}{space 1}{space 1}{ralign 9:{res:{sf: 68307.64}}}{space 1}{space 1}{ralign 9:{res:{sf: 7.21e+09}}}{space 1}{space 1}{ralign 9:{res:{sf: 84900.11}}}{space 1}{space 1}{ralign 9:{res:{sf:        0}}}{space 1}{space 1}{ralign 9:{res:{sf:   500000}}}{space 1}{space 1}{ralign 9:{res:{sf: 3.81e+08}}}{space 1}
+{space 0}{space 0}{ralign 12:bizrev_2}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     5573}}}{space 1}{space 1}{ralign 9:{res:{sf:     5573}}}{space 1}{space 1}{ralign 9:{res:{sf:  3713.43}}}{space 1}{space 1}{ralign 9:{res:{sf: 8.30e+07}}}{space 1}{space 1}{ralign 9:{res:{sf: 9112.045}}}{space 1}{space 1}{ralign 9:{res:{sf:        0}}}{space 1}{space 1}{ralign 9:{res:{sf:  82964.7}}}{space 1}{space 1}{ralign 9:{res:{sf: 2.07e+07}}}{space 1}
+{space 0}{space 0}{ralign 12:bizexpense_2}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     5573}}}{space 1}{space 1}{ralign 9:{res:{sf:     5573}}}{space 1}{space 1}{ralign 9:{res:{sf: 2373.706}}}{space 1}{space 1}{ralign 9:{res:{sf: 4.51e+07}}}{space 1}{space 1}{ralign 9:{res:{sf: 6718.959}}}{space 1}{space 1}{ralign 9:{res:{sf:        0}}}{space 1}{space 1}{ralign 9:{res:{sf: 54143.63}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.32e+07}}}{space 1}
+{space 0}{space 0}{ralign 12:bizinvestm~2}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     5573}}}{space 1}{space 1}{ralign 9:{res:{sf:     5573}}}{space 1}{space 1}{ralign 9:{res:{sf: 252.1113}}}{space 1}{space 1}{ralign 9:{res:{sf:  2072072}}}{space 1}{space 1}{ralign 9:{res:{sf: 1439.469}}}{space 1}{space 1}{ralign 9:{res:{sf:        0}}}{space 1}{space 1}{ralign 9:{res:{sf: 21824.05}}}{space 1}{space 1}{ralign 9:{res:{sf:  1405016}}}{space 1}
+{space 0}{space 0}{ralign 12:bizemploye~2}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     5573}}}{space 1}{space 1}{ralign 9:{res:{sf:     5573}}}{space 1}{space 1}{ralign 9:{res:{sf: .0687242}}}{space 1}{space 1}{ralign 9:{res:{sf: .1555417}}}{space 1}{space 1}{ralign 9:{res:{sf: .3943878}}}{space 1}{space 1}{ralign 9:{res:{sf:        0}}}{space 1}{space 1}{ralign 9:{res:{sf:        4}}}{space 1}{space 1}{ralign 9:{res:{sf:      383}}}{space 1}
+{space 0}{space 0}{ralign 12:hours_we~z_2}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     5573}}}{space 1}{space 1}{ralign 9:{res:{sf:     5573}}}{space 1}{space 1}{ralign 9:{res:{sf: 31.64974}}}{space 1}{space 1}{ralign 9:{res:{sf: 2560.611}}}{space 1}{space 1}{ralign 9:{res:{sf: 50.60248}}}{space 1}{space 1}{ralign 9:{res:{sf:        0}}}{space 1}{space 1}{ralign 9:{res:{sf:      223}}}{space 1}{space 1}{ralign 9:{res:{sf:   176384}}}{space 1}
 
 {com}. 
 . * Export summary statistics to a text file
@@ -293,7 +289,6 @@ anyloan_am~2 {c |}{res}      5,598    71407.11    87207.09          0     500000
 {res}{txt}(output written to {browse  `"table1b_nooutliers2.txt"'})
 
 {com}. 
-. 
 . ********************************************************************************
 . ********** Regression Robustness: Drop One Control at a Time ********************
 . ********************************************************************************
@@ -306,9 +301,47 @@ anyloan_am~2 {c |}{res}      5,598    71407.11    87207.09          0     500000
 . * Define baseline regression variables 
 . local baseline_controls "area_pop_base area_debt_total_base area_business_total_base"
 {txt}
-{com}. *local outcome bizrev* *
-. 
+{com}. 
 . *** Treatment effect on business revenue ***
+. regress bizrev_1 treatment `baseline_controls'
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}     6,608
+{txt}{hline 13}{c +}{hline 34}   F(4, 6603)      = {res}     7.74
+{txt}       Model {c |} {res} 3.2068e+10         4  8.0171e+09   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 6.8413e+12     6,603  1.0361e+09   {txt}R-squared       ={res}    0.0047
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0041
+{txt}       Total {c |} {res} 6.8734e+12     6,607  1.0403e+09   {txt}Root MSE        =   {res}  32188
+
+{txt}{hline 25}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}                bizrev_1{col 26}{c |} Coefficient{col 38}  Std. err.{col 50}      t{col 58}   P>|t|{col 66}     [95% con{col 79}f. interval]
+{hline 25}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 15}treatment {c |}{col 26}{res}{space 2} 1084.928{col 38}{space 2} 799.3127{col 49}{space 1}    1.36{col 58}{space 3}0.175{col 66}{space 4}-481.9838{col 79}{space 3} 2651.839
+{txt}{space 11}area_pop_base {c |}{col 26}{res}{space 2}  1.07236{col 38}{space 2} 2.712589{col 49}{space 1}    0.40{col 58}{space 3}0.693{col 66}{space 4}-4.245192{col 79}{space 3} 6.389912
+{txt}{space 4}area_debt_total_base {c |}{col 26}{res}{space 2} .0794313{col 38}{space 2}  .014919{col 49}{space 1}    5.32{col 58}{space 3}0.000{col 66}{space 4} .0501851{col 79}{space 3} .1086774
+{txt}area_business_total_base {c |}{col 26}{res}{space 2} 103.2044{col 38}{space 2} 81.35663{col 49}{space 1}    1.27{col 58}{space 3}0.205{col 66}{space 4}-56.28093{col 79}{space 3} 262.6897
+{txt}{space 19}_cons {c |}{col 26}{res}{space 2} 861.4124{col 38}{space 2} 1377.829{col 49}{space 1}    0.63{col 58}{space 3}0.532{col 66}{space 4}-1839.579{col 79}{space 3} 3562.404
+{txt}{hline 25}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. regress bizrev_2 treatment `baseline_controls'
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}     6,116
+{txt}{hline 13}{c +}{hline 34}   F(4, 6111)      = {res}     0.73
+{txt}       Model {c |} {res}  826579837         4   206644959   {txt}Prob > F        ={res}    0.5693
+{txt}    Residual {c |} {res} 1.7226e+12     6,111   281888803   {txt}R-squared       ={res}    0.0005
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}   -0.0002
+{txt}       Total {c |} {res} 1.7234e+12     6,115   281839583   {txt}Root MSE        =   {res}  16790
+
+{txt}{hline 25}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}                bizrev_2{col 26}{c |} Coefficient{col 38}  Std. err.{col 50}      t{col 58}   P>|t|{col 66}     [95% con{col 79}f. interval]
+{hline 25}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 15}treatment {c |}{col 26}{res}{space 2} 381.2675{col 38}{space 2} 433.1557{col 49}{space 1}    0.88{col 58}{space 3}0.379{col 66}{space 4}-467.8703{col 79}{space 3} 1230.405
+{txt}{space 11}area_pop_base {c |}{col 26}{res}{space 2} -.088989{col 38}{space 2} 1.475848{col 49}{space 1}   -0.06{col 58}{space 3}0.952{col 66}{space 4} -2.98217{col 79}{space 3} 2.804192
+{txt}{space 4}area_debt_total_base {c |}{col 26}{res}{space 2} .0106126{col 38}{space 2} .0076645{col 49}{space 1}    1.38{col 58}{space 3}0.166{col 66}{space 4}-.0044125{col 79}{space 3} .0256378
+{txt}area_business_total_base {c |}{col 26}{res}{space 2} 28.80614{col 38}{space 2} 44.45975{col 49}{space 1}    0.65{col 58}{space 3}0.517{col 66}{space 4}-58.35063{col 79}{space 3} 115.9629
+{txt}{space 19}_cons {c |}{col 26}{res}{space 2} 5267.039{col 38}{space 2} 745.3872{col 49}{space 1}    7.07{col 58}{space 3}0.000{col 66}{space 4} 3805.818{col 79}{space 3}  6728.26
+{txt}{hline 25}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
 . * Loop through controls, excluding one at a time
 . foreach var of varlist `baseline_controls' {c -(}
 {txt}  2{com}.     display "Running regression without control: `var'"
@@ -435,11 +468,51 @@ Running regression without control: area_business_total_base
 {txt}{hline 21}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
 {res}{browse `"/Users/felix/KTH/AppliedEconometrics/Project/Replication"' :dir}{com} : {txt}{stata `"seeout using "regression_robustness.txt""':seeout}
 
-{com}. *** Treatment effect on business revenue ***
+{com}. *** Treatment effect on ‰ of borrowing from spandana ***
 . * Define baseline regression variables 
 . local baseline_controls "area_pop_base area_debt_total_base area_business_total_base"
 {txt}
-{com}. foreach var of varlist `baseline_controls' {c -(}
+{com}. 
+. regress spandana_1 treatment `baseline_controls'
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}     6,811
+{txt}{hline 13}{c +}{hline 34}   F(4, 6806)      = {res}   114.56
+{txt}       Model {c |} {res} 49.1794181         4  12.2948545   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 730.423283     6,806  .107320494   {txt}R-squared       ={res}    0.0631
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0625
+{txt}       Total {c |} {res} 779.602702     6,810  .114479104   {txt}Root MSE        =   {res}  .3276
+
+{txt}{hline 25}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}              spandana_1{col 26}{c |} Coefficient{col 38}  Std. err.{col 50}      t{col 58}   P>|t|{col 66}     [95% con{col 79}f. interval]
+{hline 25}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 15}treatment {c |}{col 26}{res}{space 2} .1598333{col 38}{space 2} .0080109{col 49}{space 1}   19.95{col 58}{space 3}0.000{col 66}{space 4} .1441294{col 79}{space 3} .1755372
+{txt}{space 11}area_pop_base {c |}{col 26}{res}{space 2}-1.15e-06{col 38}{space 2} .0000272{col 49}{space 1}   -0.04{col 58}{space 3}0.966{col 66}{space 4}-.0000545{col 79}{space 3} .0000522
+{txt}{space 4}area_debt_total_base {c |}{col 26}{res}{space 2} 1.21e-06{col 38}{space 2} 1.46e-07{col 49}{space 1}    8.30{col 58}{space 3}0.000{col 66}{space 4} 9.27e-07{col 79}{space 3} 1.50e-06
+{txt}area_business_total_base {c |}{col 26}{res}{space 2}-.0021803{col 38}{space 2} .0008162{col 49}{space 1}   -2.67{col 58}{space 3}0.008{col 66}{space 4}-.0037804{col 79}{space 3}-.0005803
+{txt}{space 19}_cons {c |}{col 26}{res}{space 2} .0227863{col 38}{space 2} .0137743{col 49}{space 1}    1.65{col 58}{space 3}0.098{col 66}{space 4}-.0042157{col 79}{space 3} .0497883
+{txt}{hline 25}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. regress spandana_2 treatment `baseline_controls'
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}     6,142
+{txt}{hline 13}{c +}{hline 34}   F(4, 6137)      = {res}    21.64
+{txt}       Model {c |} {res} 10.9758446         4  2.74396115   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 778.206832     6,137  .126805741   {txt}R-squared       ={res}    0.0139
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0133
+{txt}       Total {c |} {res} 789.182677     6,141  .128510451   {txt}Root MSE        =   {res}  .3561
+
+{txt}{hline 25}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}              spandana_2{col 26}{c |} Coefficient{col 38}  Std. err.{col 50}      t{col 58}   P>|t|{col 66}     [95% con{col 79}f. interval]
+{hline 25}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 15}treatment {c |}{col 26}{res}{space 2} .0765014{col 38}{space 2} .0091668{col 49}{space 1}    8.35{col 58}{space 3}0.000{col 66}{space 4} .0585312{col 79}{space 3} .0944716
+{txt}{space 11}area_pop_base {c |}{col 26}{res}{space 2}-.0000459{col 38}{space 2} .0000312{col 49}{space 1}   -1.47{col 58}{space 3}0.141{col 66}{space 4}-.0001072{col 79}{space 3} .0000153
+{txt}{space 4}area_debt_total_base {c |}{col 26}{res}{space 2} 3.87e-07{col 38}{space 2} 1.62e-07{col 49}{space 1}    2.38{col 58}{space 3}0.017{col 66}{space 4} 6.88e-08{col 79}{space 3} 7.06e-07
+{txt}area_business_total_base {c |}{col 26}{res}{space 2}-.0026014{col 38}{space 2} .0009411{col 49}{space 1}   -2.76{col 58}{space 3}0.006{col 66}{space 4}-.0044464{col 79}{space 3}-.0007565
+{txt}{space 19}_cons {c |}{col 26}{res}{space 2} .1310122{col 38}{space 2} .0157801{col 49}{space 1}    8.30{col 58}{space 3}0.000{col 66}{space 4} .1000777{col 79}{space 3} .1619468
+{txt}{hline 25}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+. foreach var of varlist `baseline_controls' {c -(}
 {txt}  2{com}.     display "Running regression without control: `var'"
 {txt}  3{com}. 
 .     * Build the list of controls excluding `var`
@@ -562,6 +635,173 @@ Running regression without control: area_business_total_base
 {txt}{hline 21}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
 {res}{browse `"/Users/felix/KTH/AppliedEconometrics/Project/Replication"' :dir}{com} : {txt}{stata `"seeout using "regression_robustness.txt""':seeout}
 
+{com}. *** Treatment effect on loan amount from spandana ***
+. * Define baseline regression variables 
+. local baseline_controls "area_pop_base area_debt_total_base area_business_total_base"
+{txt}
+{com}. 
+. regress spandana_amt_1 treatment `baseline_controls'
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}     6,811
+{txt}{hline 13}{c +}{hline 34}   F(4, 6806)      = {res}    78.61
+{txt}       Model {c |} {res} 5.8693e+09         4  1.4673e+09   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 1.2704e+11     6,806  18665733.8   {txt}R-squared       ={res}    0.0442
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0436
+{txt}       Total {c |} {res} 1.3291e+11     6,810  19516633.5   {txt}Root MSE        =   {res} 4320.4
+
+{txt}{hline 25}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}          spandana_amt_1{col 26}{c |} Coefficient{col 38}  Std. err.{col 50}      t{col 58}   P>|t|{col 66}     [95% con{col 79}f. interval]
+{hline 25}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 15}treatment {c |}{col 26}{res}{space 2} 1693.892{col 38}{space 2} 105.6485{col 49}{space 1}   16.03{col 58}{space 3}0.000{col 66}{space 4} 1486.788{col 79}{space 3} 1900.997
+{txt}{space 11}area_pop_base {c |}{col 26}{res}{space 2} .2647641{col 38}{space 2} .3588049{col 49}{space 1}    0.74{col 58}{space 3}0.461{col 66}{space 4}-.4386056{col 79}{space 3} .9681337
+{txt}{space 4}area_debt_total_base {c |}{col 26}{res}{space 2} .0157062{col 38}{space 2} .0019297{col 49}{space 1}    8.14{col 58}{space 3}0.000{col 66}{space 4} .0119234{col 79}{space 3} .0194891
+{txt}area_business_total_base {c |}{col 26}{res}{space 2}-26.95815{col 38}{space 2} 10.76434{col 49}{space 1}   -2.50{col 58}{space 3}0.012{col 66}{space 4}-48.05961{col 79}{space 3}-5.856689
+{txt}{space 19}_cons {c |}{col 26}{res}{space 2} 140.8999{col 38}{space 2} 181.6567{col 49}{space 1}    0.78{col 58}{space 3}0.438{col 66}{space 4}-215.2041{col 79}{space 3} 497.0038
+{txt}{hline 25}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. regress spandana_amt_2 treatment `baseline_controls'
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}     6,142
+{txt}{hline 13}{c +}{hline 34}   F(4, 6137)      = {res}    16.15
+{txt}       Model {c |} {res} 2.8039e+09         4   700983069   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 2.6635e+11     6,137  43400249.2   {txt}R-squared       ={res}    0.0104
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0098
+{txt}       Total {c |} {res} 2.6915e+11     6,141  43828572.2   {txt}Root MSE        =   {res} 6587.9
+
+{txt}{hline 25}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}          spandana_amt_2{col 26}{c |} Coefficient{col 38}  Std. err.{col 50}      t{col 58}   P>|t|{col 66}     [95% con{col 79}f. interval]
+{hline 25}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 15}treatment {c |}{col 26}{res}{space 2} 1202.183{col 38}{space 2} 169.5882{col 49}{space 1}    7.09{col 58}{space 3}0.000{col 66}{space 4} 869.7306{col 79}{space 3} 1534.635
+{txt}{space 11}area_pop_base {c |}{col 26}{res}{space 2}-.0839841{col 38}{space 2} .5778523{col 49}{space 1}   -0.15{col 58}{space 3}0.884{col 66}{space 4}-1.216777{col 79}{space 3} 1.048809
+{txt}{space 4}area_debt_total_base {c |}{col 26}{res}{space 2} .0069451{col 38}{space 2} .0030054{col 49}{space 1}    2.31{col 58}{space 3}0.021{col 66}{space 4} .0010534{col 79}{space 3} .0128368
+{txt}area_business_total_base {c |}{col 26}{res}{space 2}-50.79176{col 38}{space 2} 17.41119{col 49}{space 1}   -2.92{col 58}{space 3}0.004{col 66}{space 4} -84.9238{col 79}{space 3}-16.65971
+{txt}{space 19}_cons {c |}{col 26}{res}{space 2} 1715.132{col 38}{space 2} 291.9355{col 49}{space 1}    5.88{col 58}{space 3}0.000{col 66}{space 4} 1142.836{col 79}{space 3} 2287.428
+{txt}{hline 25}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+. foreach var of varlist `baseline_controls' {c -(}
+{txt}  2{com}.     display "Running regression without control: `var'"
+{txt}  3{com}. 
+.     * Build the list of controls excluding `var`
+.     local controls_removed ""
+{txt}  4{com}.     foreach control of varlist `baseline_controls' {c -(}
+{txt}  5{com}.         if "`control'" != "`var'" {c -(}
+{txt}  6{com}.             local controls_removed "`controls_removed' `control'"
+{txt}  7{com}.         {c )-}
+{txt}  8{com}.     {c )-}   
+{txt}  9{com}.         * Run regression with remaining controls: but regressing on treatment
+.     regress spandana_amt_1 treatment `controls_removed'
+{txt} 10{com}.         outreg2 using regression_robustness.txt, append ctitle("Effect of treatment on credit EL1: Excluding `var'")
+{txt} 11{com}.         
+.         regress spandana_amt_2 treatment `controls_removed'
+{txt} 12{com}.         outreg2 using regression_robustness.txt, append ctitle("Effect of treatment on credit EL2: Excluding `var'")
+{txt} 13{com}. {c )-}
+Running regression without control: area_pop_base
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}     6,811
+{txt}{hline 13}{c +}{hline 34}   F(3, 6807)      = {res}   104.64
+{txt}       Model {c |} {res} 5.8591e+09         3  1.9530e+09   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 1.2705e+11     6,807  18664484.8   {txt}R-squared       ={res}    0.0441
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0437
+{txt}       Total {c |} {res} 1.3291e+11     6,810  19516633.5   {txt}Root MSE        =   {res} 4320.2
+
+{txt}{hline 25}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}          spandana_amt_1{col 26}{c |} Coefficient{col 38}  Std. err.{col 50}      t{col 58}   P>|t|{col 66}     [95% con{col 79}f. interval]
+{hline 25}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 15}treatment {c |}{col 26}{res}{space 2} 1689.261{col 38}{space 2} 105.4584{col 49}{space 1}   16.02{col 58}{space 3}0.000{col 66}{space 4}  1482.53{col 79}{space 3} 1895.992
+{txt}{space 4}area_debt_total_base {c |}{col 26}{res}{space 2}  .015557{col 38}{space 2}  .001919{col 49}{space 1}    8.11{col 58}{space 3}0.000{col 66}{space 4} .0117951{col 79}{space 3} .0193189
+{txt}area_business_total_base {c |}{col 26}{res}{space 2}-27.59493{col 38}{space 2} 10.72933{col 49}{space 1}   -2.57{col 58}{space 3}0.010{col 66}{space 4}-48.62777{col 79}{space 3}-6.562085
+{txt}{space 19}_cons {c |}{col 26}{res}{space 2}  234.924{col 38}{space 2} 129.4685{col 49}{space 1}    1.81{col 58}{space 3}0.070{col 66}{space 4}-18.87476{col 79}{space 3} 488.7228
+{txt}{hline 25}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{browse `"/Users/felix/KTH/AppliedEconometrics/Project/Replication"' :dir}{com} : {txt}{stata `"seeout using "regression_robustness.txt""':seeout}
+
+      Source {c |}       SS           df       MS      Number of obs   ={res}     6,142
+{txt}{hline 13}{c +}{hline 34}   F(3, 6138)      = {res}    21.53
+{txt}       Model {c |} {res} 2.8030e+09         3   934338507   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 2.6635e+11     6,138  43393327.8   {txt}R-squared       ={res}    0.0104
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0099
+{txt}       Total {c |} {res} 2.6915e+11     6,141  43828572.2   {txt}Root MSE        =   {res} 6587.4
+
+{txt}{hline 25}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}          spandana_amt_2{col 26}{c |} Coefficient{col 38}  Std. err.{col 50}      t{col 58}   P>|t|{col 66}     [95% con{col 79}f. interval]
+{hline 25}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 15}treatment {c |}{col 26}{res}{space 2} 1203.584{col 38}{space 2} 169.3005{col 49}{space 1}    7.11{col 58}{space 3}0.000{col 66}{space 4} 871.6957{col 79}{space 3} 1535.472
+{txt}{space 4}area_debt_total_base {c |}{col 26}{res}{space 2} .0069882{col 38}{space 2} .0029905{col 49}{space 1}    2.34{col 58}{space 3}0.019{col 66}{space 4} .0011259{col 79}{space 3} .0128506
+{txt}area_business_total_base {c |}{col 26}{res}{space 2}-50.56396{col 38}{space 2} 17.33912{col 49}{space 1}   -2.92{col 58}{space 3}0.004{col 66}{space 4}-84.55472{col 79}{space 3} -16.5732
+{txt}{space 19}_cons {c |}{col 26}{res}{space 2} 1685.358{col 38}{space 2} 207.9668{col 49}{space 1}    8.10{col 58}{space 3}0.000{col 66}{space 4}  1277.67{col 79}{space 3} 2093.045
+{txt}{hline 25}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{browse `"/Users/felix/KTH/AppliedEconometrics/Project/Replication"' :dir}{com} : {txt}{stata `"seeout using "regression_robustness.txt""':seeout}
+Running regression without control: area_debt_total_base
+
+      Source {c |}       SS           df       MS      Number of obs   ={res}     6,811
+{txt}{hline 13}{c +}{hline 34}   F(3, 6807)      = {res}    81.95
+{txt}       Model {c |} {res} 4.6328e+09         3  1.5443e+09   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 1.2828e+11     6,807  18844646.9   {txt}R-squared       ={res}    0.0349
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0344
+{txt}       Total {c |} {res} 1.3291e+11     6,810  19516633.5   {txt}Root MSE        =   {res}   4341
+
+{txt}{hline 25}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}          spandana_amt_1{col 26}{c |} Coefficient{col 38}  Std. err.{col 50}      t{col 58}   P>|t|{col 66}     [95% con{col 79}f. interval]
+{hline 25}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 15}treatment {c |}{col 26}{res}{space 2} 1614.702{col 38}{space 2} 105.7025{col 49}{space 1}   15.28{col 58}{space 3}0.000{col 66}{space 4} 1407.492{col 79}{space 3} 1821.912
+{txt}{space 11}area_pop_base {c |}{col 26}{res}{space 2}-.0412979{col 38}{space 2}  .358535{col 49}{space 1}   -0.12{col 58}{space 3}0.908{col 66}{space 4}-.7441385{col 79}{space 3} .6615428
+{txt}area_business_total_base {c |}{col 26}{res}{space 2}-25.44974{col 38}{space 2}  10.8142{col 49}{space 1}   -2.35{col 58}{space 3}0.019{col 66}{space 4}-46.64895{col 79}{space 3}-4.250529
+{txt}{space 19}_cons {c |}{col 26}{res}{space 2}  800.155{col 38}{space 2} 163.3766{col 49}{space 1}    4.90{col 58}{space 3}0.000{col 66}{space 4} 479.8858{col 79}{space 3} 1120.424
+{txt}{hline 25}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{browse `"/Users/felix/KTH/AppliedEconometrics/Project/Replication"' :dir}{com} : {txt}{stata `"seeout using "regression_robustness.txt""':seeout}
+
+      Source {c |}       SS           df       MS      Number of obs   ={res}     6,142
+{txt}{hline 13}{c +}{hline 34}   F(3, 6138)      = {res}    19.74
+{txt}       Model {c |} {res} 2.5722e+09         3   857390846   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 2.6658e+11     6,138  43430936.7   {txt}R-squared       ={res}    0.0096
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0091
+{txt}       Total {c |} {res} 2.6915e+11     6,141  43828572.2   {txt}Root MSE        =   {res} 6590.2
+
+{txt}{hline 25}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}          spandana_amt_2{col 26}{c |} Coefficient{col 38}  Std. err.{col 50}      t{col 58}   P>|t|{col 66}     [95% con{col 79}f. interval]
+{hline 25}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 15}treatment {c |}{col 26}{res}{space 2} 1165.018{col 38}{space 2} 168.8836{col 49}{space 1}    6.90{col 58}{space 3}0.000{col 66}{space 4} 833.9468{col 79}{space 3} 1496.089
+{txt}{space 11}area_pop_base {c |}{col 26}{res}{space 2}-.2158953{col 38}{space 2} .5752291{col 49}{space 1}   -0.38{col 58}{space 3}0.707{col 66}{space 4}-1.343546{col 79}{space 3} .9117555
+{txt}area_business_total_base {c |}{col 26}{res}{space 2}-50.47951{col 38}{space 2} 17.41682{col 49}{space 1}   -2.90{col 58}{space 3}0.004{col 66}{space 4}-84.62259{col 79}{space 3}-16.33643
+{txt}{space 19}_cons {c |}{col 26}{res}{space 2}  2011.39{col 38}{space 2} 262.3719{col 49}{space 1}    7.67{col 58}{space 3}0.000{col 66}{space 4} 1497.049{col 79}{space 3} 2525.731
+{txt}{hline 25}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{browse `"/Users/felix/KTH/AppliedEconometrics/Project/Replication"' :dir}{com} : {txt}{stata `"seeout using "regression_robustness.txt""':seeout}
+Running regression without control: area_business_total_base
+
+      Source {c |}       SS           df       MS      Number of obs   ={res}     6,811
+{txt}{hline 13}{c +}{hline 34}   F(3, 6807)      = {res}   102.64
+{txt}       Model {c |} {res} 5.7522e+09         3  1.9174e+09   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 1.2716e+11     6,807  18680190.3   {txt}R-squared       ={res}    0.0433
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0429
+{txt}       Total {c |} {res} 1.3291e+11     6,810  19516633.5   {txt}Root MSE        =   {res} 4322.1
+
+{txt}{hline 21}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}      spandana_amt_1{col 22}{c |} Coefficient{col 34}  Std. err.{col 46}      t{col 54}   P>|t|{col 62}     [95% con{col 75}f. interval]
+{hline 21}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 11}treatment {c |}{col 22}{res}{space 2} 1712.748{col 34}{space 2} 105.4207{col 45}{space 1}   16.25{col 54}{space 3}0.000{col 62}{space 4}  1506.09{col 75}{space 3} 1919.405
+{txt}{space 7}area_pop_base {c |}{col 22}{res}{space 2} .3368017{col 34}{space 2} .3577885{col 45}{space 1}    0.94{col 54}{space 3}0.347{col 62}{space 4}-.3645756{col 75}{space 3} 1.038179
+{txt}area_debt_total_base {c |}{col 22}{res}{space 2}  .015623{col 34}{space 2} .0019302{col 45}{space 1}    8.09{col 54}{space 3}0.000{col 62}{space 4} .0118393{col 75}{space 3} .0194068
+{txt}{space 15}_cons {c |}{col 22}{res}{space 2}-79.74845{col 34}{space 2} 158.9224{col 45}{space 1}   -0.50{col 54}{space 3}0.616{col 62}{space 4} -391.286{col 75}{space 3} 231.7891
+{txt}{hline 21}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{browse `"/Users/felix/KTH/AppliedEconometrics/Project/Replication"' :dir}{com} : {txt}{stata `"seeout using "regression_robustness.txt""':seeout}
+
+      Source {c |}       SS           df       MS      Number of obs   ={res}     6,142
+{txt}{hline 13}{c +}{hline 34}   F(3, 6138)      = {res}    18.68
+{txt}       Model {c |} {res} 2.4346e+09         3   811532110   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 2.6672e+11     6,138  43453350.5   {txt}R-squared       ={res}    0.0090
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0086
+{txt}       Total {c |} {res} 2.6915e+11     6,141  43828572.2   {txt}Root MSE        =   {res} 6591.9
+
+{txt}{hline 21}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}      spandana_amt_2{col 22}{c |} Coefficient{col 34}  Std. err.{col 46}      t{col 54}   P>|t|{col 62}     [95% con{col 75}f. interval]
+{hline 21}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 11}treatment {c |}{col 22}{res}{space 2} 1236.095{col 34}{space 2} 169.2928{col 45}{space 1}    7.30{col 54}{space 3}0.000{col 62}{space 4} 904.2221{col 75}{space 3} 1567.969
+{txt}{space 7}area_pop_base {c |}{col 22}{res}{space 2} .0677615{col 34}{space 2} .5758582{col 45}{space 1}    0.12{col 54}{space 3}0.906{col 62}{space 4}-1.061122{col 75}{space 3} 1.196645
+{txt}area_debt_total_base {c |}{col 22}{res}{space 2} .0068771{col 34}{space 2} .0030072{col 45}{space 1}    2.29{col 54}{space 3}0.022{col 62}{space 4}  .000982{col 75}{space 3} .0127722
+{txt}{space 15}_cons {c |}{col 22}{res}{space 2} 1290.795{col 34}{space 2} 253.2702{col 45}{space 1}    5.10{col 54}{space 3}0.000{col 62}{space 4} 794.2964{col 75}{space 3} 1787.293
+{txt}{hline 21}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{browse `"/Users/felix/KTH/AppliedEconometrics/Project/Replication"' :dir}{com} : {txt}{stata `"seeout using "regression_robustness.txt""':seeout}
+
 {com}. ********************************************************************************
 . ********** Regression Robustness: Add Additional Controls ***********************
 . ********************************************************************************
@@ -571,76 +811,35 @@ Running regression without control: area_business_total_base
 {txt}(Endline data for "The miracle of microfinance?" (Banerjee et al.), AEJ 2014)
 
 {com}. 
+. *Run regression with baseline + additional controls: treatment effect on total outstanding loan amount from spandana*
+. 
 . * Baseline and additional control variables
 . local baseline_controls "area_pop_base area_debt_total_base area_business_total_base"
 {txt}
-{com}. local additional_controls "adult* children* male_head* hhsize*"
+{com}. local additional_controls "adults_1 children_1 male_head_1 hhsize_1"
 {txt}
-{com}. *local outcome bizrev* *
-. 
-. * Run regression with baseline + additional controls: treatment effect on business revenue*
-. *regress `outcome' `baseline_controls' `additional_controls'*
-. 
-. regress bizrev_1 treatment `baseline_controls' `additional_controls'
+{com}. 
+. regress spandana_amt_1 treatment `baseline_controls' `additional_controls'
 
-{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}     5,898
-{txt}{hline 13}{c +}{hline 34}   F(14, 5883)     = {res}     5.14
-{txt}       Model {c |} {res} 6.8334e+10        14  4.8810e+09   {txt}Prob > F        ={res}    0.0000
-{txt}    Residual {c |} {res} 5.5884e+12     5,883   949920662   {txt}R-squared       ={res}    0.0121
-{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0097
-{txt}       Total {c |} {res} 5.6567e+12     5,897   959253464   {txt}Root MSE        =   {res}  30821
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}     6,799
+{txt}{hline 13}{c +}{hline 34}   F(8, 6790)      = {res}    42.43
+{txt}       Model {c |} {res} 6.3079e+09         8   788483916   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 1.2619e+11     6,790  18584991.1   {txt}R-squared       ={res}    0.0476
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0465
+{txt}       Total {c |} {res} 1.3250e+11     6,798    19491021   {txt}Root MSE        =   {res}   4311
 
 {txt}{hline 25}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}                bizrev_1{col 26}{c |} Coefficient{col 38}  Std. err.{col 50}      t{col 58}   P>|t|{col 66}     [95% con{col 79}f. interval]
+{col 1}          spandana_amt_1{col 26}{c |} Coefficient{col 38}  Std. err.{col 50}      t{col 58}   P>|t|{col 66}     [95% con{col 79}f. interval]
 {hline 25}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 15}treatment {c |}{col 26}{res}{space 2} 1129.462{col 38}{space 2} 810.1156{col 49}{space 1}    1.39{col 58}{space 3}0.163{col 66}{space 4}-458.6618{col 79}{space 3} 2717.587
-{txt}{space 11}area_pop_base {c |}{col 26}{res}{space 2} .9635526{col 38}{space 2}  2.75969{col 49}{space 1}    0.35{col 58}{space 3}0.727{col 66}{space 4}-4.446453{col 79}{space 3} 6.373558
-{txt}{space 4}area_debt_total_base {c |}{col 26}{res}{space 2}  .079651{col 38}{space 2}  .014651{col 49}{space 1}    5.44{col 58}{space 3}0.000{col 66}{space 4} .0509297{col 79}{space 3} .1083723
-{txt}area_business_total_base {c |}{col 26}{res}{space 2} 79.17539{col 38}{space 2} 83.15203{col 49}{space 1}    0.95{col 58}{space 3}0.341{col 66}{space 4}-83.83313{col 79}{space 3} 242.1839
-{txt}{space 16}adults_1 {c |}{col 26}{res}{space 2} 2773.211{col 38}{space 2} 2062.116{col 49}{space 1}    1.34{col 58}{space 3}0.179{col 66}{space 4}-1269.293{col 79}{space 3} 6815.715
-{txt}{space 16}adults_2 {c |}{col 26}{res}{space 2} 1343.489{col 38}{space 2} 1489.531{col 49}{space 1}    0.90{col 58}{space 3}0.367{col 66}{space 4}-1576.539{col 79}{space 3} 4263.516
-{txt}{space 14}children_1 {c |}{col 26}{res}{space 2} 2706.856{col 38}{space 2} 2160.585{col 49}{space 1}    1.25{col 58}{space 3}0.210{col 66}{space 4}-1528.684{col 79}{space 3} 6942.395
-{txt}{space 14}children_2 {c |}{col 26}{res}{space 2} 1197.623{col 38}{space 2} 1041.942{col 49}{space 1}    1.15{col 58}{space 3}0.250{col 66}{space 4}-844.9648{col 79}{space 3} 3240.211
-{txt}{space 13}male_head_1 {c |}{col 26}{res}{space 2} 1272.366{col 38}{space 2} 1616.868{col 49}{space 1}    0.79{col 58}{space 3}0.431{col 66}{space 4}-1897.289{col 79}{space 3} 4442.022
-{txt}{space 13}male_head_2 {c |}{col 26}{res}{space 2} 1821.629{col 38}{space 2} 1257.572{col 49}{space 1}    1.45{col 58}{space 3}0.148{col 66}{space 4}-643.6739{col 79}{space 3} 4286.931
-{txt}{space 16}hhsize_1 {c |}{col 26}{res}{space 2}-2484.857{col 38}{space 2} 2511.631{col 49}{space 1}   -0.99{col 58}{space 3}0.323{col 66}{space 4}-7408.576{col 79}{space 3} 2438.863
-{txt}{space 12}hhsize_adj_1 {c |}{col 26}{res}{space 2} 372.5254{col 38}{space 2} 1508.099{col 49}{space 1}    0.25{col 58}{space 3}0.805{col 66}{space 4}-2583.903{col 79}{space 3} 3328.954
-{txt}{space 16}hhsize_2 {c |}{col 26}{res}{space 2} 442.6131{col 38}{space 2} 494.0623{col 49}{space 1}    0.90{col 58}{space 3}0.370{col 66}{space 4}-525.9305{col 79}{space 3} 1411.157
-{txt}{space 12}hhsize_adj_2 {c |}{col 26}{res}{space 2}-1633.535{col 38}{space 2} 1527.414{col 49}{space 1}   -1.07{col 58}{space 3}0.285{col 66}{space 4}-4627.828{col 79}{space 3} 1360.758
-{txt}{space 19}_cons {c |}{col 26}{res}{space 2}-7487.559{col 38}{space 2} 2124.254{col 49}{space 1}   -3.52{col 58}{space 3}0.000{col 66}{space 4}-11651.88{col 79}{space 3}-3323.241
-{txt}{hline 25}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}{txt}
-{com}. * Export results
-. outreg2 using regression_addcontrols.txt, append ctitle("With Additional Controls")
-{browse `"/Users/felix/KTH/AppliedEconometrics/Project/Replication"' :dir} : {txt}{stata `"seeout using "regression_addcontrols.txt""':seeout}
-
-{com}. regress bizrev_2 treatment `baseline_controls' `additional_controls'
-
-{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}     6,070
-{txt}{hline 13}{c +}{hline 34}   F(14, 6055)     = {res}     7.47
-{txt}       Model {c |} {res} 2.8885e+10        14  2.0632e+09   {txt}Prob > F        ={res}    0.0000
-{txt}    Residual {c |} {res} 1.6719e+12     6,055   276124898   {txt}R-squared       ={res}    0.0170
-{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0147
-{txt}       Total {c |} {res} 1.7008e+12     6,069   280247345   {txt}Root MSE        =   {res}  16617
-
-{txt}{hline 25}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}                bizrev_2{col 26}{c |} Coefficient{col 38}  Std. err.{col 50}      t{col 58}   P>|t|{col 66}     [95% con{col 79}f. interval]
-{hline 25}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 15}treatment {c |}{col 26}{res}{space 2} 360.1444{col 38}{space 2} 430.5793{col 49}{space 1}    0.84{col 58}{space 3}0.403{col 66}{space 4}-483.9442{col 79}{space 3} 1204.233
-{txt}{space 11}area_pop_base {c |}{col 26}{res}{space 2}-.2580532{col 38}{space 2}  1.46834{col 49}{space 1}   -0.18{col 58}{space 3}0.861{col 66}{space 4}-3.136523{col 79}{space 3} 2.620416
-{txt}{space 4}area_debt_total_base {c |}{col 26}{res}{space 2} .0098912{col 38}{space 2} .0076079{col 49}{space 1}    1.30{col 58}{space 3}0.194{col 66}{space 4}-.0050229{col 79}{space 3} .0248053
-{txt}area_business_total_base {c |}{col 26}{res}{space 2}  34.5947{col 38}{space 2} 44.23107{col 49}{space 1}    0.78{col 58}{space 3}0.434{col 66}{space 4}-52.11395{col 79}{space 3} 121.3033
-{txt}{space 16}adults_1 {c |}{col 26}{res}{space 2} 1159.949{col 38}{space 2}  1106.46{col 49}{space 1}    1.05{col 58}{space 3}0.295{col 66}{space 4}-1009.105{col 79}{space 3} 3329.003
-{txt}{space 16}adults_2 {c |}{col 26}{res}{space 2} 477.2649{col 38}{space 2} 785.4942{col 49}{space 1}    0.61{col 58}{space 3}0.543{col 66}{space 4}-1062.583{col 79}{space 3} 2017.113
-{txt}{space 14}children_1 {c |}{col 26}{res}{space 2} 2098.514{col 38}{space 2} 1158.378{col 49}{space 1}    1.81{col 58}{space 3}0.070{col 66}{space 4}-172.3202{col 79}{space 3} 4369.348
-{txt}{space 14}children_2 {c |}{col 26}{res}{space 2} 371.4965{col 38}{space 2} 550.4713{col 49}{space 1}    0.67{col 58}{space 3}0.500{col 66}{space 4}-707.6231{col 79}{space 3} 1450.616
-{txt}{space 13}male_head_1 {c |}{col 26}{res}{space 2} 1409.901{col 38}{space 2} 858.5716{col 49}{space 1}    1.64{col 58}{space 3}0.101{col 66}{space 4}-273.2046{col 79}{space 3} 3093.007
-{txt}{space 13}male_head_2 {c |}{col 26}{res}{space 2}   1501.6{col 38}{space 2} 669.1127{col 49}{space 1}    2.24{col 58}{space 3}0.025{col 66}{space 4} 189.9007{col 79}{space 3} 2813.299
-{txt}{space 16}hhsize_1 {c |}{col 26}{res}{space 2}-2144.028{col 38}{space 2} 1342.865{col 49}{space 1}   -1.60{col 58}{space 3}0.110{col 66}{space 4}-4776.521{col 79}{space 3} 488.4658
-{txt}{space 12}hhsize_adj_1 {c |}{col 26}{res}{space 2} 1304.426{col 38}{space 2} 801.0005{col 49}{space 1}    1.63{col 58}{space 3}0.103{col 66}{space 4}-265.8197{col 79}{space 3} 2874.672
-{txt}{space 16}hhsize_2 {c |}{col 26}{res}{space 2}-14.53844{col 38}{space 2} 258.9566{col 49}{space 1}   -0.06{col 58}{space 3}0.955{col 66}{space 4}-522.1854{col 79}{space 3} 493.1086
-{txt}{space 12}hhsize_adj_2 {c |}{col 26}{res}{space 2} 62.66036{col 38}{space 2} 808.1626{col 49}{space 1}    0.08{col 58}{space 3}0.938{col 66}{space 4}-1521.626{col 79}{space 3} 1646.947
-{txt}{space 19}_cons {c |}{col 26}{res}{space 2}-2165.867{col 38}{space 2} 1128.639{col 49}{space 1}   -1.92{col 58}{space 3}0.055{col 66}{space 4}-4378.402{col 79}{space 3} 46.66733
+{space 15}treatment {c |}{col 26}{res}{space 2}  1700.16{col 38}{space 2} 105.5337{col 49}{space 1}   16.11{col 58}{space 3}0.000{col 66}{space 4} 1493.281{col 79}{space 3} 1907.039
+{txt}{space 11}area_pop_base {c |}{col 26}{res}{space 2} .2082972{col 38}{space 2} .3586056{col 49}{space 1}    0.58{col 58}{space 3}0.561{col 66}{space 4}-.4946822{col 79}{space 3} .9112766
+{txt}{space 4}area_debt_total_base {c |}{col 26}{res}{space 2} .0154871{col 38}{space 2} .0019277{col 49}{space 1}    8.03{col 58}{space 3}0.000{col 66}{space 4} .0117082{col 79}{space 3} .0192661
+{txt}area_business_total_base {c |}{col 26}{res}{space 2}-27.87307{col 38}{space 2} 10.75445{col 49}{space 1}   -2.59{col 58}{space 3}0.010{col 66}{space 4}-48.95516{col 79}{space 3}-6.790975
+{txt}{space 16}adults_1 {c |}{col 26}{res}{space 2} 211.1379{col 38}{space 2}  265.371{col 49}{space 1}    0.80{col 58}{space 3}0.426{col 66}{space 4}-309.0724{col 79}{space 3} 731.3482
+{txt}{space 14}children_1 {c |}{col 26}{res}{space 2} 229.6386{col 38}{space 2} 266.1627{col 49}{space 1}    0.86{col 58}{space 3}0.388{col 66}{space 4}-292.1238{col 79}{space 3} 751.4009
+{txt}{space 13}male_head_1 {c |}{col 26}{res}{space 2}  156.152{col 38}{space 2} 175.5077{col 49}{space 1}    0.89{col 58}{space 3}0.374{col 66}{space 4}-187.8981{col 79}{space 3}  500.202
+{txt}{space 16}hhsize_1 {c |}{col 26}{res}{space 2}-104.3943{col 38}{space 2} 264.3315{col 49}{space 1}   -0.39{col 58}{space 3}0.693{col 66}{space 4}-622.5668{col 79}{space 3} 413.7782
+{txt}{space 19}_cons {c |}{col 26}{res}{space 2}-601.6032{col 38}{space 2} 271.3895{col 49}{space 1}   -2.22{col 58}{space 3}0.027{col 66}{space 4}-1133.612{col 79}{space 3}-69.59474
 {txt}{hline 25}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
 {res}{txt}
 {com}. * Export results
@@ -651,73 +850,30 @@ Running regression without control: area_business_total_base
 . * Baseline and additional control variables
 . local baseline_controls "area_pop_base area_debt_total_base area_business_total_base"
 {txt}
-{com}. local additional_controls "adult* children* male_head* hhsize*"
+{com}. local additional_controls "adults_2 children_2 male_head_2 hhsize_2"
 {txt}
-{com}. *local outcome bizrev* *
-. 
-. * Run regression with baseline + additional controls: treatment effect on credit*
-. *regress `outcome' `baseline_controls' `additional_controls'*
-. 
-. regress spandana_1 treatment `baseline_controls' `additional_controls'
+{com}. 
+. regress spandana_amt_2 treatment `baseline_controls' `additional_controls'
 
-{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}     6,054
-{txt}{hline 13}{c +}{hline 34}   F(14, 6039)     = {res}    34.02
-{txt}       Model {c |} {res} 52.1414617        14  3.72439012   {txt}Prob > F        ={res}    0.0000
-{txt}    Residual {c |} {res} 661.160157     6,039  .109481728   {txt}R-squared       ={res}    0.0731
-{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0709
-{txt}       Total {c |} {res} 713.301619     6,053   .11784266   {txt}Root MSE        =   {res} .33088
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}     6,131
+{txt}{hline 13}{c +}{hline 34}   F(8, 6122)      = {res}    11.48
+{txt}       Model {c |} {res} 3.9774e+09         8   497180671   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 2.6512e+11     6,122  43306254.2   {txt}R-squared       ={res}    0.0148
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0135
+{txt}       Total {c |} {res} 2.6910e+11     6,130  43898586.2   {txt}Root MSE        =   {res} 6580.7
 
 {txt}{hline 25}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}              spandana_1{col 26}{c |} Coefficient{col 38}  Std. err.{col 50}      t{col 58}   P>|t|{col 66}     [95% con{col 79}f. interval]
+{col 1}          spandana_amt_2{col 26}{c |} Coefficient{col 38}  Std. err.{col 50}      t{col 58}   P>|t|{col 66}     [95% con{col 79}f. interval]
 {hline 25}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 15}treatment {c |}{col 26}{res}{space 2} .1662748{col 38}{space 2} .0085836{col 49}{space 1}   19.37{col 58}{space 3}0.000{col 66}{space 4}  .149448{col 79}{space 3} .1831017
-{txt}{space 11}area_pop_base {c |}{col 26}{res}{space 2}-6.91e-06{col 38}{space 2} .0000293{col 49}{space 1}   -0.24{col 58}{space 3}0.813{col 66}{space 4}-.0000643{col 79}{space 3} .0000505
-{txt}{space 4}area_debt_total_base {c |}{col 26}{res}{space 2} 1.24e-06{col 38}{space 2} 1.52e-07{col 49}{space 1}    8.19{col 58}{space 3}0.000{col 66}{space 4} 9.44e-07{col 79}{space 3} 1.54e-06
-{txt}area_business_total_base {c |}{col 26}{res}{space 2}  -.00259{col 38}{space 2} .0008814{col 49}{space 1}   -2.94{col 58}{space 3}0.003{col 66}{space 4}-.0043179{col 79}{space 3}-.0008622
-{txt}{space 16}adults_1 {c |}{col 26}{res}{space 2} .0235265{col 38}{space 2} .0220339{col 49}{space 1}    1.07{col 58}{space 3}0.286{col 66}{space 4}-.0196678{col 79}{space 3} .0667208
-{txt}{space 16}adults_2 {c |}{col 26}{res}{space 2}-.0133033{col 38}{space 2} .0156689{col 49}{space 1}   -0.85{col 58}{space 3}0.396{col 66}{space 4}  -.04402{col 79}{space 3} .0174133
-{txt}{space 14}children_1 {c |}{col 26}{res}{space 2} .0339403{col 38}{space 2} .0230679{col 49}{space 1}    1.47{col 58}{space 3}0.141{col 66}{space 4} -.011281{col 79}{space 3} .0791616
-{txt}{space 14}children_2 {c |}{col 26}{res}{space 2}-.0078423{col 38}{space 2} .0109868{col 49}{space 1}   -0.71{col 58}{space 3}0.475{col 66}{space 4}-.0293803{col 79}{space 3} .0136956
-{txt}{space 13}male_head_1 {c |}{col 26}{res}{space 2} .0206728{col 38}{space 2} .0171134{col 49}{space 1}    1.21{col 58}{space 3}0.227{col 66}{space 4}-.0128755{col 79}{space 3} .0542211
-{txt}{space 13}male_head_2 {c |}{col 26}{res}{space 2}-.0209895{col 38}{space 2} .0133259{col 49}{space 1}   -1.58{col 58}{space 3}0.115{col 66}{space 4}-.0471131{col 79}{space 3} .0051341
-{txt}{space 16}hhsize_1 {c |}{col 26}{res}{space 2} -.040659{col 38}{space 2} .0267389{col 49}{space 1}   -1.52{col 58}{space 3}0.128{col 66}{space 4}-.0930768{col 79}{space 3} .0117588
-{txt}{space 12}hhsize_adj_1 {c |}{col 26}{res}{space 2} .0205044{col 38}{space 2} .0159472{col 49}{space 1}    1.29{col 58}{space 3}0.199{col 66}{space 4}-.0107578{col 79}{space 3} .0517666
-{txt}{space 16}hhsize_2 {c |}{col 26}{res}{space 2} .0004579{col 38}{space 2} .0051786{col 49}{space 1}    0.09{col 58}{space 3}0.930{col 66}{space 4}-.0096941{col 79}{space 3} .0106098
-{txt}{space 12}hhsize_adj_2 {c |}{col 26}{res}{space 2} .0226218{col 38}{space 2} .0161179{col 49}{space 1}    1.40{col 58}{space 3}0.161{col 66}{space 4} -.008975{col 79}{space 3} .0542187
-{txt}{space 19}_cons {c |}{col 26}{res}{space 2}-.0352378{col 38}{space 2} .0225119{col 49}{space 1}   -1.57{col 58}{space 3}0.118{col 66}{space 4}-.0793692{col 79}{space 3} .0088936
-{txt}{hline 25}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}{txt}
-{com}. * Export results
-. outreg2 using regression_addcontrols.txt, append ctitle("With Additional Controls")
-{browse `"/Users/felix/KTH/AppliedEconometrics/Project/Replication"' :dir} : {txt}{stata `"seeout using "regression_addcontrols.txt""':seeout}
-
-{com}. regress spandana_2 treatment `baseline_controls' `additional_controls'
-
-{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}     6,096
-{txt}{hline 13}{c +}{hline 34}   F(14, 6081)     = {res}     9.73
-{txt}       Model {c |} {res} 17.2022978        14  1.22873556   {txt}Prob > F        ={res}    0.0000
-{txt}    Residual {c |} {res} 768.135629     6,081  .126317321   {txt}R-squared       ={res}    0.0219
-{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0197
-{txt}       Total {c |} {res} 785.337927     6,095  .128849537   {txt}Root MSE        =   {res} .35541
-
-{txt}{hline 25}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}              spandana_2{col 26}{c |} Coefficient{col 38}  Std. err.{col 50}      t{col 58}   P>|t|{col 66}     [95% con{col 79}f. interval]
-{hline 25}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 15}treatment {c |}{col 26}{res}{space 2} .0783606{col 38}{space 2} .0091884{col 49}{space 1}    8.53{col 58}{space 3}0.000{col 66}{space 4}  .060348{col 79}{space 3} .0963732
-{txt}{space 11}area_pop_base {c |}{col 26}{res}{space 2}-.0000537{col 38}{space 2} .0000313{col 49}{space 1}   -1.71{col 58}{space 3}0.087{col 66}{space 4}-.0001151{col 79}{space 3} 7.77e-06
-{txt}{space 4}area_debt_total_base {c |}{col 26}{res}{space 2} 3.81e-07{col 38}{space 2} 1.63e-07{col 49}{space 1}    2.35{col 58}{space 3}0.019{col 66}{space 4} 6.27e-08{col 79}{space 3} 7.00e-07
-{txt}area_business_total_base {c |}{col 26}{res}{space 2}-.0027223{col 38}{space 2} .0009442{col 49}{space 1}   -2.88{col 58}{space 3}0.004{col 66}{space 4}-.0045732{col 79}{space 3}-.0008714
-{txt}{space 16}adults_1 {c |}{col 26}{res}{space 2} .0397877{col 38}{space 2} .0236636{col 49}{space 1}    1.68{col 58}{space 3}0.093{col 66}{space 4}-.0066013{col 79}{space 3} .0861768
-{txt}{space 16}adults_2 {c |}{col 26}{res}{space 2}-.0311667{col 38}{space 2}  .016752{col 49}{space 1}   -1.86{col 58}{space 3}0.063{col 66}{space 4}-.0640066{col 79}{space 3} .0016731
-{txt}{space 14}children_1 {c |}{col 26}{res}{space 2} .0469136{col 38}{space 2} .0247691{col 49}{space 1}    1.89{col 58}{space 3}0.058{col 66}{space 4}-.0016426{col 79}{space 3} .0954698
-{txt}{space 14}children_2 {c |}{col 26}{res}{space 2}-.0243704{col 38}{space 2} .0117399{col 49}{space 1}   -2.08{col 58}{space 3}0.038{col 66}{space 4}-.0473848{col 79}{space 3} -.001356
-{txt}{space 13}male_head_1 {c |}{col 26}{res}{space 2} .0119919{col 38}{space 2} .0183367{col 49}{space 1}    0.65{col 58}{space 3}0.513{col 66}{space 4}-.0239545{col 79}{space 3} .0479384
-{txt}{space 13}male_head_2 {c |}{col 26}{res}{space 2}-.0073359{col 38}{space 2} .0142637{col 49}{space 1}   -0.51{col 58}{space 3}0.607{col 66}{space 4}-.0352979{col 79}{space 3}  .020626
-{txt}{space 16}hhsize_1 {c |}{col 26}{res}{space 2}-.0240857{col 38}{space 2}  .028694{col 49}{space 1}   -0.84{col 58}{space 3}0.401{col 66}{space 4} -.080336{col 79}{space 3} .0321646
-{txt}{space 12}hhsize_adj_1 {c |}{col 26}{res}{space 2}-.0227202{col 38}{space 2} .0170837{col 49}{space 1}   -1.33{col 58}{space 3}0.184{col 66}{space 4}-.0562103{col 79}{space 3} .0107698
-{txt}{space 16}hhsize_2 {c |}{col 26}{res}{space 2} .0042473{col 38}{space 2} .0055303{col 49}{space 1}    0.77{col 58}{space 3}0.443{col 66}{space 4} -.006594{col 79}{space 3} .0150886
-{txt}{space 12}hhsize_adj_2 {c |}{col 26}{res}{space 2} .0442187{col 38}{space 2} .0172356{col 49}{space 1}    2.57{col 58}{space 3}0.010{col 66}{space 4} .0104309{col 79}{space 3} .0780065
-{txt}{space 19}_cons {c |}{col 26}{res}{space 2} .0644798{col 38}{space 2} .0240927{col 49}{space 1}    2.68{col 58}{space 3}0.007{col 66}{space 4} .0172495{col 79}{space 3} .1117101
+{space 15}treatment {c |}{col 26}{res}{space 2} 1201.678{col 38}{space 2} 169.5872{col 49}{space 1}    7.09{col 58}{space 3}0.000{col 66}{space 4} 869.2278{col 79}{space 3} 1534.129
+{txt}{space 11}area_pop_base {c |}{col 26}{res}{space 2} -.145489{col 38}{space 2} .5780916{col 49}{space 1}   -0.25{col 58}{space 3}0.801{col 66}{space 4}-1.278752{col 79}{space 3} .9877738
+{txt}{space 4}area_debt_total_base {c |}{col 26}{res}{space 2} .0067982{col 38}{space 2} .0030042{col 49}{space 1}    2.26{col 58}{space 3}0.024{col 66}{space 4} .0009088{col 79}{space 3} .0126876
+{txt}area_business_total_base {c |}{col 26}{res}{space 2}-51.72613{col 38}{space 2} 17.43505{col 49}{space 1}   -2.97{col 58}{space 3}0.003{col 66}{space 4}-85.90496{col 79}{space 3} -17.5473
+{txt}{space 16}adults_2 {c |}{col 26}{res}{space 2} 185.1761{col 38}{space 2} 86.39098{col 49}{space 1}    2.14{col 58}{space 3}0.032{col 66}{space 4} 15.81938{col 79}{space 3} 354.5328
+{txt}{space 14}children_2 {c |}{col 26}{res}{space 2} 249.8721{col 38}{space 2} 95.64531{col 49}{space 1}    2.61{col 58}{space 3}0.009{col 66}{space 4} 62.37365{col 79}{space 3} 437.3705
+{txt}{space 13}male_head_2 {c |}{col 26}{res}{space 2} 235.9353{col 38}{space 2} 217.7034{col 49}{space 1}    1.08{col 58}{space 3}0.279{col 66}{space 4}-190.8399{col 79}{space 3} 662.7106
+{txt}{space 16}hhsize_2 {c |}{col 26}{res}{space 2}-28.31542{col 38}{space 2} 73.48871{col 49}{space 1}   -0.39{col 58}{space 3}0.700{col 66}{space 4}-172.3791{col 79}{space 3} 115.7483
+{txt}{space 19}_cons {c |}{col 26}{res}{space 2} 546.8781{col 38}{space 2} 402.1373{col 49}{space 1}    1.36{col 58}{space 3}0.174{col 66}{space 4}-241.4524{col 79}{space 3} 1335.209
 {txt}{hline 25}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
 {res}{txt}
 {com}. * Export results

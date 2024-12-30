@@ -74,13 +74,13 @@ esttab using table1b_nooutliers1.txt, replace cells("mean sd min max") label tit
 use "$datadir/2013-0533_data_endlines1and2.dta", clear
 
 * Define key variables for summary statistics
-local hh_composition_2 "hhsize_2 adults_2 children_2 male_head_2 head_age_2 head_noeduc_2"
 local credit_access_2 "spandana_2 othermfi_2 anybank_2 anyinformal_2 anyloan_2"
 local loan_amt_2 "spandana_amt_2 othermfi_amt_2 bank_amt_2 informal_amt_2 anyloan_amt_2"
+local businesses_2 "bizrev_2 bizexpense_2 bizinvestment_2 bizemployees_2 hours_week_biz_2"
 
 * Exclude outliers (1st and 99th percentiles for numeric variables)
 
-foreach var of varlist `hh_composition_2' `credit_access_2' `loan_amt_2' {
+foreach var of varlist `hh_composition_2' `credit_access_2' `loan_amt_2' `businesses_2' {
     quietly summarize `var', detail
     local p1 = r(p1)
     local p99 = r(p99)
@@ -88,14 +88,13 @@ foreach var of varlist `hh_composition_2' `credit_access_2' `loan_amt_2' {
 }
 
 * Recalculate summary statistics
-summarize `hh_composition_2' `credit_access_2' `loan_amt_2'
+summarize `credit_access_2' `loan_amt_2' `businesses_2'
 
 * Store summary statistics
-estpost summarize `hh_composition_2' `credit_access_2' `loan_amt_2'
+estpost summarize `credit_access_2' `loan_amt_2' `businesses_2'
 
 * Export summary statistics to a text file
 esttab using table1b_nooutliers2.txt, replace cells("mean sd min max") label title("Excluding Outliers Endline 2")
-
 
 ********************************************************************************
 ********** Regression Robustness: Drop One Control at a Time ********************
@@ -106,9 +105,11 @@ use "$datadir/2013-0533_data_endlines1and2.dta", clear
 
 * Define baseline regression variables 
 local baseline_controls "area_pop_base area_debt_total_base area_business_total_base"
-*local outcome bizrev* *
 
 *** Treatment effect on business revenue ***
+regress bizrev_1 treatment `baseline_controls'
+regress bizrev_2 treatment `baseline_controls'
+
 * Loop through controls, excluding one at a time
 foreach var of varlist `baseline_controls' {
     display "Running regression without control: `var'"
@@ -129,9 +130,13 @@ foreach var of varlist `baseline_controls' {
 	outreg2 using regression_robustness.txt, append ctitle("Effect of treatment on revenue of old businesses EL2: Excluding `var'")
 
 }
-*** Treatment effect on business revenue ***
+*** Treatment effect on ‰ of borrowing from spandana ***
 * Define baseline regression variables 
 local baseline_controls "area_pop_base area_debt_total_base area_business_total_base"
+
+regress spandana_1 treatment `baseline_controls'
+regress spandana_2 treatment `baseline_controls'
+
 foreach var of varlist `baseline_controls' {
     display "Running regression without control: `var'"
 
@@ -149,6 +154,30 @@ foreach var of varlist `baseline_controls' {
 	regress spandana_2 treatment `controls_removed'
 	outreg2 using regression_robustness.txt, append ctitle("Effect of treatment on credit EL2: Excluding `var'")
 }
+*** Treatment effect on loan amount from spandana ***
+* Define baseline regression variables 
+local baseline_controls "area_pop_base area_debt_total_base area_business_total_base"
+
+regress spandana_amt_1 treatment `baseline_controls'
+regress spandana_amt_2 treatment `baseline_controls'
+
+foreach var of varlist `baseline_controls' {
+    display "Running regression without control: `var'"
+
+    * Build the list of controls excluding `var`
+    local controls_removed ""
+    foreach control of varlist `baseline_controls' {
+        if "`control'" != "`var'" {
+            local controls_removed "`controls_removed' `control'"
+        }
+    }	
+	* Run regression with remaining controls: but regressing on treatment
+    regress spandana_amt_1 treatment `controls_removed'
+	outreg2 using regression_robustness.txt, append ctitle("Effect of treatment on credit EL1: Excluding `var'")
+	
+	regress spandana_amt_2 treatment `controls_removed'
+	outreg2 using regression_robustness.txt, append ctitle("Effect of treatment on credit EL2: Excluding `var'")
+}
 ********************************************************************************
 ********** Regression Robustness: Add Additional Controls ***********************
 ********************************************************************************
@@ -156,32 +185,20 @@ foreach var of varlist `baseline_controls' {
 * Load endline dataset
 use "$datadir/2013-0533_data_endlines1and2.dta", clear
 
+*Run regression with baseline + additional controls: treatment effect on total outstanding loan amount from spandana*
+
 * Baseline and additional control variables
 local baseline_controls "area_pop_base area_debt_total_base area_business_total_base"
-local additional_controls "adult* children* male_head* hhsize*"
-*local outcome bizrev* *
+local additional_controls "adults_1 children_1 male_head_1 hhsize_1"
 
-* Run regression with baseline + additional controls: treatment effect on business revenue*
-*regress `outcome' `baseline_controls' `additional_controls'*
-
-regress bizrev_1 treatment `baseline_controls' `additional_controls'
-* Export results
-outreg2 using regression_addcontrols.txt, append ctitle("With Additional Controls")
-regress bizrev_2 treatment `baseline_controls' `additional_controls'
+regress spandana_amt_1 treatment `baseline_controls' `additional_controls'
 * Export results
 outreg2 using regression_addcontrols.txt, append ctitle("With Additional Controls")
 
 * Baseline and additional control variables
 local baseline_controls "area_pop_base area_debt_total_base area_business_total_base"
-local additional_controls "adult* children* male_head* hhsize*"
-*local outcome bizrev* *
+local additional_controls "adults_2 children_2 male_head_2 hhsize_2"
 
-* Run regression with baseline + additional controls: treatment effect on credit*
-*regress `outcome' `baseline_controls' `additional_controls'*
-
-regress spandana_1 treatment `baseline_controls' `additional_controls'
-* Export results
-outreg2 using regression_addcontrols.txt, append ctitle("With Additional Controls")
-regress spandana_2 treatment `baseline_controls' `additional_controls'
+regress spandana_amt_2 treatment `baseline_controls' `additional_controls'
 * Export results
 outreg2 using regression_addcontrols.txt, append ctitle("With Additional Controls")
